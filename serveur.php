@@ -517,6 +517,30 @@
 		return $app->json($data, 201);
     });
 
+    $app->post('/utilisateur/favoriCommerce/ajout', function (Request $request) use ($app) {
+		$data = [];
+	    if ($content = $request->getContent()) {
+	        $data = json_decode($content, true);
+	    }
+		$connexion=connexionbd();
+		$sql="INSERT INTO FavoriCommerce(pseudo, idCommerce) values (:pseudo, :idCommerce)";
+		$stmt=$connexion->prepare($sql);
+		$stmt->execute(array('pseudo'=>$data['pseudo'], 'idCommerce'=>$data['idCommerce']));
+		return $app->json($data, 201);
+    });
+
+    $app->delete('/utilisateur/favoriCommerce/supprimer', function (Request $request) use ($app) {
+		$data = [];
+	    if ($content = $request->getContent()) {
+	        $data = json_decode($content, true);
+	    }
+		$connexion=connexionbd();
+		$sql="DELETE FROM FavoriCommerce WHERE pseudo='".$data['pseudo']."' AND idCommerce = :idCommerce";
+		$stmt=$connexion->prepare($sql);
+		$stmt->execute(array('idCommerce'=>$data['idCommerce']));
+		return $app->json($data, 201);
+    });
+
     $app->post('/utilisateur/choisiVille', function (Request $request) use ($app) {
 		$data = [];
 	    if ($content = $request->getContent()) {
