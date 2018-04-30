@@ -180,9 +180,8 @@
     $app->get('/utilisateur/favoriCommerce/{pseudo}/{id}', function ($pseudo, $id) use ($app) {
         $connexion=connexionbd();
 
-        $sql="SELECT * FROM FavoriCommerce WHERE pseudo = :pseudo AND id = :id";
+        $sql="SELECT * FROM FavoriCommerce WHERE pseudo = ':pseudo' AND idCommerce = :id";
         $stmt=$connexion->prepare($sql);
-        $stmt->bindParam(':pseudo', $pseudo);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         $response = new Response();
