@@ -1,0 +1,13 @@
+DROP TABLE Evenement;
+DROP TABLE Message;
+DROP TABLE Associe;
+DROP TABLE Adhere;
+DROP TABLE Reseau;
+DROP TABLE ListeAnnonce;
+DROP TABLE Annonce;
+DROP TABLE Commerce;
+DROP TABLE Apprecie;
+DROP TABLE Choisi;
+DROP TABLE Lieu;
+DROP TABLE Utilisateur;
+DROP TABLE Theme;
