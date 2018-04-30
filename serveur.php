@@ -204,9 +204,9 @@
 	    return $response;
 	});
 
-    $app->get('/commerce/theme/{id}', function ($id) use ($app) {
+    $app->get('/commerce/theme/{id}/{localisation}', function ($id, $localisation) use ($app) {
 	   	$connexion=connexionbd();
-		$sql="SELECT * FROM Commerce WHERE id IN (SELECT idCommerce FROM Appartient WHERE idTheme = ".$id.") ORDER BY nom;";
+		$sql="SELECT * FROM Commerce WHERE id IN (SELECT idCommerce FROM Appartient WHERE idTheme = ".$id.") AND localisation='".$localisation."' ORDER BY nom;";
         $query = $connexion->query($sql);
         $data=null;
 		while ($donnees=$query->fetch()) {
