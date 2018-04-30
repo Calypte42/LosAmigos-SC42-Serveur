@@ -176,18 +176,18 @@ INSERT INTO Theme (nom, idNomPere) SELECT "Agence de voyage", id From Theme wher
 
 INSERT INTO Theme (nom, idNomPere) SELECT ("CATEGORIE 1"), id From Theme where nom="Commerce";
 
-INSERT INTO Theme (nom, idNomPere) SELECT "Traiteurs bio", id From Theme where nom="Restauration";
-INSERT INTO Theme (nom, idNomPere) SELECT "Restaurants", id From Theme where nom="Restauration";
-INSERT INTO Theme (nom, idNomPere) SELECT "Pizzeria", id From Theme where nom="Restauration";
-INSERT INTO Theme (nom, idNomPere) SELECT "Traiteur", id From Theme where nom="Restauration";
-INSERT INTO Theme (nom, idNomPere) SELECT "Kebab", id From Theme where nom="Restauration";
-INSERT INTO Theme (nom, idNomPere) SELECT "Restauration rapide et libre service", id From Theme where nom="Restauration";
-INSERT INTO Theme (nom, idNomPere) SELECT "Cafés brasseries", id From Theme where nom="Restauration";
-INSERT INTO Theme (nom, idNomPere) SELECT "Crêperie", id From Theme where nom="Restauration";
-INSERT INTO Theme (nom, idNomPere) SELECT "Restaurant chinois", id From Theme where nom="Restauration";
-INSERT INTO Theme (nom, idNomPere) SELECT "Restaurant asiatique", id From Theme where nom="Restauration";
-INSERT INTO Theme (nom, idNomPere) SELECT "Bar", id From Theme where nom="Restauration";
-INSERT INTO Theme (nom, idNomPere) SELECT "Fast food", id From Theme where nom="Restauration";
+INSERT INTO Theme (nom, idNomPere) SELECT "Traiteurs bio", id From Theme where nom="CATEGORIE 1";
+INSERT INTO Theme (nom, idNomPere) SELECT "Restaurants", id From Theme where nom="CATEGORIE 1";
+INSERT INTO Theme (nom, idNomPere) SELECT "Pizzeria", id From Theme where nom="CATEGORIE 1";
+INSERT INTO Theme (nom, idNomPere) SELECT "Traiteur", id From Theme where nom="CATEGORIE 1";
+INSERT INTO Theme (nom, idNomPere) SELECT "Kebab", id From Theme where nom="CATEGORIE 1";
+INSERT INTO Theme (nom, idNomPere) SELECT "Restauration rapide et libre service", id From Theme where nom="CATEGORIE 1";
+INSERT INTO Theme (nom, idNomPere) SELECT "Cafés brasseries", id From Theme where nom="CATEGORIE 1";
+INSERT INTO Theme (nom, idNomPere) SELECT "Crêperie", id From Theme where nom="CATEGORIE 1";
+INSERT INTO Theme (nom, idNomPere) SELECT "Restaurant chinois", id From Theme where nom="CATEGORIE 1";
+INSERT INTO Theme (nom, idNomPere) SELECT "Restaurant asiatique", id From Theme where nom="CATEGORIE 1";
+INSERT INTO Theme (nom, idNomPere) SELECT "Bar", id From Theme where nom="CATEGORIE 1";
+INSERT INTO Theme (nom, idNomPere) SELECT "Fast food", id From Theme where nom="CATEGORIE 1";
 
 
 /*INSERT INTO Theme (nom, idNomPere) SELECT "Boulangeries", id From Theme where nom="Commerce";
