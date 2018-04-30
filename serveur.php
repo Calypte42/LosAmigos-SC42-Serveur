@@ -62,6 +62,34 @@
 	    return $response;
 	});
 
+    $app->get('/themes/listeThemesEnfant/id/{id}', function ($id) use ($app) {
+	   	$connexion=connexionbd();
+		$sql="SELECT * FROM Theme WHERE idNomPere = ".$id. " ORDER BY nom";
+		$query = $connexion->query($sql);
+        $data=null;
+        while ($donnees=$query->fetch()) {
+			$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],'idNomPere'=>$donnees['idNomPere']);
+		}
+	   	$response = new Response();
+	    $response->setContent(json_encode(utf8ize($data)));
+		$response->headers->set('Content-Type', 'application/json');
+	    return $response;
+	});
+
+    $app->get('/themes/listeThemesEnfant/nom/{nom}', function ($nom) use ($app) {
+	   	$connexion=connexionbd();
+		$sql="SELECT * FROM Theme WHERE idNomPere = (SELECT id FROM Theme WHERE nom LIKE '".$nom."') ORDER BY nom";
+		$query = $connexion->query($sql);
+        $data=null;
+		while ($donnees=$query->fetch()) {
+			$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],'idNomPere'=>$donnees['idNomPere']);
+		}
+	   	$response = new Response();
+	    $response->setContent(json_encode(utf8ize($data)));
+		$response->headers->set('Content-Type', 'application/json');
+	    return $response;
+	});
+
 	/********** GET - VILLES ****************/
 
 	$app->get('/villes/{nom}', function ($nom) use ($app) {
@@ -149,7 +177,49 @@
 	    return $response;
 	});
 
+    $app->get('/utilisateur/favoriCommerce/{pseudo}/{id}', function ($pseudo, $id) use ($app) {
+        $connexion=connexionbd();
+
+        $sql="SELECT * FROM FavoriCommerce WHERE pseudo = :pseudo AND id = :id";
+        $stmt=$connexion->prepare($sql);
+        $stmt->bindParam(':pseudo', $pseudo);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        $response = new Response();
+        $response->setContent(json_encode(utf8ize($stmt->fetch(PDO::FETCH_OBJ))));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    });
+
 	/********************* GET - COMMERCES **************/
+
+    $app->get('/commerce/id/{id}', function ($id) use ($app) {
+	   	$connexion=connexionbd();
+		$sql="SELECT * FROM Commerce WHERE id = :id";
+        $stmt=$connexion->prepare($sql);
+		$stmt->bindParam(':id', $id);
+		$stmt->execute();
+	   	$response = new Response();
+	    $response->setContent(json_encode(utf8ize($stmt->fetch(PDO::FETCH_OBJ))));
+		$response->headers->set('Content-Type', 'application/json');
+	    return $response;
+	});
+
+    $app->get('/commerce/theme/{id}', function ($id) use ($app) {
+	   	$connexion=connexionbd();
+		$sql="SELECT * FROM Commerce WHERE id IN (SELECT idCommerce FROM Appartient WHERE idTheme = ".$id.") ORDER BY nom;";
+        $query = $connexion->query($sql);
+        $data=null;
+		while ($donnees=$query->fetch()) {
+			$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],
+            'pseudoCommercant'=>$donnees['pseudoCommercant'],
+            'localisation'=>$donnees['localisation']);
+		}
+	   	$response = new Response();
+	    $response->setContent(json_encode(utf8ize($data)));
+		$response->headers->set('Content-Type', 'application/json');
+	    return $response;
+	});
 
 	$app->get('/commerce/{localisation}', function ($localisation) use ($app) {
 	   	$connexion=connexionbd();

@@ -1,180 +1,40 @@
-CREATE TABLE Theme (
-  id int PRIMARY KEY AUTO_INCREMENT,
-  nom varchar(50),
-  idNomPere int,
-  CONSTRAINT nomPere_FK FOREIGN KEY (IdNomPere) REFERENCES Theme (id),
-  CONSTRAINT nom_idPere_Unique UNIQUE (nom,idNomPere)
-);
+-- phpMyAdmin SQL Dump
+-- version 4.5.4.1deb2ubuntu2
+-- http://www.phpmyadmin.net
+--
+-- Client :  localhost
+-- Généré le :  Dim 15 Avril 2018 à 20:29
+-- Version du serveur :  5.7.21-0ubuntu0.16.04.1
+-- Version de PHP :  7.0.28-0ubuntu0.16.04.1
 
-CREATE TABLE Utilisateur (
-  pseudo varchar(20) PRIMARY KEY,
-  MDP varchar(20),
-  dateNaissance varchar(10),
-  sexe int, /* 0 pour Homme, 1 pour Femme */
-  taille float,
-  poids float
-);
-
-CREATE TABLE Lieu (
-  nom varchar(100) NOT NULL,
-  latitude varchar(50) NOT NULL,
-  longitude varchar(50) NOT NULL,
-  CONSTRAINT Lieu_pk PRIMARY KEY (nom,latitude,longitude)
-);
-
-CREATE TABLE Choisi (
-  pseudo varchar(20),
-  nomLieu varchar(30),
-  CONSTRAINT Choisi_PK PRIMARY KEY (pseudo,nomLieu),
-  CONSTRAINT Choisi_pseudo_FK FOREIGN KEY (pseudo)
-    REFERENCES Utilisateur(pseudo),
-  CONSTRAINT Choisi_FK FOREIGN KEY (nomLieu)
-    REFERENCES Lieu(nom)
-);
-
-CREATE TABLE Apprecie (
-  pseudo varchar(20),
-  idTheme int,
-  CONSTRAINT Apprecie_PK PRIMARY KEY (pseudo,idTheme),
-  CONSTRAINT Apprecie_pseudo_FK FOREIGN KEY (pseudo)
-    REFERENCES Utilisateur(pseudo),
-  CONSTRAINT Apprecie_idTheme_FK FOREIGN KEY (idTheme)
-    REFERENCES Theme(id)
-);
-
-CREATE TABLE Commerce (
-  id int PRIMARY KEY AUTO_INCREMENT,
-  nom varchar(50),
-  pseudoCommercant varchar(20),
-  localisation varchar(30),
-  CONSTRAINT pseudoCommercant_Commerce_FK FOREIGN KEY (pseudoCommercant)
-    REFERENCES Utilisateur(pseudo),
-  CONSTRAINT localisation_Commerce_FK FOREIGN KEY (localisation)
-    REFERENCES Lieu(nom)
-);
-
-CREATE TABLE ThemeCommerce (
-  idCommerce int,
-  idTheme int,
-  CONSTRAINT ThemeCommerce_PK PRIMARY KEY (idCommerce,idTheme),
-  CONSTRAINT ThemeCommerce_idCommerce_FK FOREIGN KEY (idCommerce)
-    REFERENCES Commerce(id),
-  CONSTRAINT ThemeCommerce_idTheme_FK FOREIGN KEY (idTheme)
-    REFERENCES Theme(id)
-);
-
-CREATE TABLE FavoriCommerce (
-  pseudo varchar(20),
-  idCommerce int,
-  CONSTRAINT FavoriCommerce_PK PRIMARY KEY (pseudo,idCommerce),
-  CONSTRAINT FavoriCommerce_pseudo_FK FOREIGN KEY (pseudo)
-    REFERENCES Utilisateur(pseudo),
-  CONSTRAINT FavoriCommerce_idCommerce_FK FOREIGN KEY (idCommerce)
-    REFERENCES Commerce(id)
-);
-
-CREATE TABLE Annonce (
-  id int PRIMARY KEY AUTO_INCREMENT,
-  titre varchar(100),
-  contenu varchar(500),
-  ageMin int,
-  ageMax int,
-  sexeConcerne varchar(6),
-  pseudoCommercant varchar(20),
-  CONSTRAINT pseudoCommercant_Annonce_FK FOREIGN KEY (pseudoCommercant)
-    REFERENCES Utilisateur(pseudo),
-  CONSTRAINT sexeCheck CHECK (sexeConcerne="Homme" or sexeConcerne="Femme" or sexeConcerne="Mixte")
-);
-
-CREATE TABLE ListeAnnonce (
-  idAnnonce int,
-  idCommerce int,
-  idTheme int,
-  CONSTRAINT ListeAnnonce_PK PRIMARY KEY(idAnnonce,idCommerce,idTheme),
-  CONSTRAINT ListeAnnonce_id_FK FOREIGN KEY (idAnnonce)
-    REFERENCES Annonce(id),
-  CONSTRAINT ListeAnnonce_idCommerce_FK FOREIGN KEY (idCommerce)
-    REFERENCES Commerce(id),
-  CONSTRAINT ListeAnnonce_idTheme_FK FOREIGN KEY (idTheme)
-    REFERENCES Theme(id)
-);
-
-CREATE TABLE Reseau (
-  sujet varchar(100) PRIMARY KEY,
-  description varchar(100),
-  pseudoAdmin varchar(20),
-  localisation varchar(30),
-  visibilite int, /* 0 prive, 1 public */
-  CONSTRAINT pseudoAdmin_reseau_FK FOREIGN KEY (pseudoAdmin)
-    REFERENCES Utilisateur(pseudo),
-  CONSTRAINT localisation_Reseau_FK FOREIGN KEY (localisation)
-    REFERENCES Lieu(nom)
-);
-
-CREATE TABLE Adhere(
-  pseudo varchar(20),
-  sujetReseau varchar(100),
-  CONSTRAINT Adhere_PK PRIMARY KEY (pseudo,sujetReseau),
-  CONSTRAINT pseudo_adhere_FK FOREIGN KEY (pseudo)
-    REFERENCES Utilisateur(pseudo),
-  CONSTRAINT sujetReseau_adhere_FK FOREIGN KEY (sujetReseau)
-    REFERENCES Reseau(sujet)
-);
-
-CREATE TABLE Associe (
-  sujetReseau varchar(100),
-  idTheme int,
-  CONSTRAINT Associe_PK PRIMARY KEY (sujetReseau,idTheme),
-  CONSTRAINT Associe_sujetReseau_FK FOREIGN KEY (sujetReseau)
-    REFERENCES Reseau(sujet),
-  CONSTRAINT Associe_idTheme_FK FOREIGN KEY (idTheme)
-    REFERENCES Theme(id)
-);
-
-CREATE TABLE Appartient (
-  idCommerce int,
-  idTheme int,
-  CONSTRAINT Appartient_PK PRIMARY KEY (idCommerce,idTheme),
-  CONSTRAINT Appartient_idCommerce_FK FOREIGN KEY (idCommerce)
-    REFERENCES Commerce(id),
-  CONSTRAINT Appartient_idTheme_FK FOREIGN KEY (idTheme)
-    REFERENCES Theme(id)
-);
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
 
 
-CREATE TABLE Message (
-  id int PRIMARY KEY AUTO_INCREMENT,
-  contenu varchar(500) NOT NULL,
-  pseudoAuteur varchar(20),
-  sujetReseau varchar(100),
-  CONSTRAINT Message_pseudoAuteur_FK FOREIGN KEY (pseudoAuteur)
-    REFERENCES Utilisateur(pseudo),
-  CONSTRAINT Message_sujetReseau_FK FOREIGN KEY (sujetReseau)
-    REFERENCES Reseau(sujet)
-);
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
-CREATE TABLE Evenement (
-  intitule varchar(100),
-  dateEvenement varchar(10),
-  sujetReseau varchar(100),
-  pseudoCreateur varchar(20),
-  CONSTRAINT sujetReseau_FK FOREIGN KEY (sujetReseau)
-    REFERENCES Reseau(sujet),
-  CONSTRAINT pseudoCreateur_FK FOREIGN KEY (pseudoCreateur)
-    REFERENCES Utilisateur(pseudo)
-);
+--
+-- Base de données :  `smartcity`
+--
 
-CREATE TABLE Publicite (
-  id int PRIMARY KEY AUTO_INCREMENT,
-  titre varchar(50) NOT NULL,
-  nomFournisseur varchar(50),
-  lienPub varchar(200) NOT NULL,
-  lieu varchar(100),
-  CONSTRAINT publicite_lieu FOREIGN KEY (lieu)
-      REFERENCES Lieu(nom)
-);
+-- --------------------------------------------------------
 
+--
+-- Structure de la table `Lieu`
+--
 
+CREATE TABLE `Lieu` (
+  `nom` varchar(100) NOT NULL,
+  `latitude` varchar(50) NOT NULL,
+  `longitude` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `Lieu`
+--
 
 INSERT INTO `Lieu` (`nom`, `latitude`, `longitude`) VALUES
 ('AAST', '43.283333', '-0.083333'),
@@ -35402,3 +35262,17 @@ INSERT INTO `Lieu` (`nom`, `latitude`, `longitude`) VALUES
 ('ZUTZENDORF', '48.85', '7.55'),
 ('ZUYDCOOTE', '51.066667', '2.5'),
 ('ZUYTPEENE', '50.8', '2.433333');
+
+--
+-- Index pour les tables exportées
+--
+
+--
+-- Index pour la table `Lieu`
+--
+ALTER TABLE `Lieu`
+  ADD PRIMARY KEY (`nom`,`latitude`,`longitude`);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
