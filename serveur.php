@@ -526,7 +526,7 @@
 		$sql="INSERT INTO FavoriCommerce(pseudo, idCommerce) values (:pseudo, :idCommerce)";
 		$stmt=$connexion->prepare($sql);
 		$stmt->execute(array('pseudo'=>$data['pseudo'], 'idCommerce'=>$data['idCommerce']));
-		return $app->json($data, 201);
+		return $stmt;
     });
 
     $app->delete('/utilisateur/favoriCommerce/supprimer', function (Request $request) use ($app) {
