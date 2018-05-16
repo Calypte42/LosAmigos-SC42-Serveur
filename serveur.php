@@ -534,10 +534,9 @@
 	        $data = json_decode($content, true);
 	    }
 		$connexion=connexionbd();
-		$sql="DELETE FROM FavoriCommerce WHERE pseudo='".$data['pseudo']."' AND idCommerce = :idCommerce";
+		$sql="DELETE FROM FavoriCommerce WHERE pseudo=:pseudo AND idCommerce = :idCommerce";
 		$stmt=$connexion->prepare($sql);
-		$stmt->execute(array('idCommerce'=>$data['idCommerce']));
-		return $app->json($data, 201);
+		return $stmt->execute(array('pseudo'=>$date['pseudo'], 'idCommerce'=>$data['idCommerce']));
     });
 
     $app->post('/utilisateur/choisiVille', function (Request $request) use ($app) {
