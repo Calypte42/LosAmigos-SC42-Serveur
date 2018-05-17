@@ -47,6 +47,8 @@ CREATE TABLE Commerce (
   nom varchar(50),
   pseudoCommercant varchar(20),
   localisation varchar(30),
+  latitude varchar(50),
+  longitude varchar(50),
   CONSTRAINT pseudoCommercant_Commerce_FK FOREIGN KEY (pseudoCommercant)
     REFERENCES Utilisateur(pseudo),
   CONSTRAINT localisation_Commerce_FK FOREIGN KEY (localisation)

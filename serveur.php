@@ -190,6 +190,19 @@
         return $response;
     });
 
+    $app->get('/utilisateur/listeFavorisCommerce/{pseudo}', function ($pseudo) use ($app) {
+        $connexion=connexionbd();
+
+        $sql="SELECT * FROM Commerce WHERE id IN (SELECT idCommerce FROM FavoriCommerce WHERE pseudo = '".$pseudo."')";
+        $stmt=$connexion->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        $response = new Response();
+        $response->setContent(json_encode(utf8ize($stmt->fetch(PDO::FETCH_OBJ))));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    });
+
 	/********************* GET - COMMERCES **************/
 
     $app->get('/commerce/id/{id}', function ($id) use ($app) {
@@ -243,6 +256,22 @@
 		$stmt->execute();
 	   	$response = new Response();
 	    $response->setContent(json_encode(utf8ize($stmt->fetch(PDO::FETCH_OBJ))));
+		$response->headers->set('Content-Type', 'application/json');
+	    return $response;
+	});
+
+    $app->get('/commerce/proximite/{latitude}/{longitude}', function ($latitude,$longitude) use ($app) {
+	   	$connexion=connexionbd();
+	   	$formule="(6366*acos(cos(radians(".$latitude."))*cos(radians(`latitude`))*cos(radians(`longitude`) -radians(".$longitude."))+sin(radians(".$latitude."))*sin(radians(`latitude`))))";
+
+		$sql="SELECT nom,".$formule." AS dist, latitude, longitude FROM Lieu WHERE ".$formule." <= 10 ORDER BY dist ASC LIMIT 3";
+
+		$query = $connexion->query($sql);
+		while ($donnees=$query->fetch()) {
+			$data[]=Array('nom'=>$donnees['nom'],'dist' => $donnees['dist'],'latitude'=>$donnees['latitude'],'longitude'=>$donnees['longitude']);
+		}
+	   	$response = new Response();
+	    $response->setContent(json_encode(utf8ize($data)));
 		$response->headers->set('Content-Type', 'application/json');
 	    return $response;
 	});
