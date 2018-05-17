@@ -180,9 +180,8 @@
     $app->get('/utilisateur/favoriCommerce/{pseudo}/{id}', function ($pseudo, $id) use ($app) {
         $connexion=connexionbd();
 
-        $sql="SELECT * FROM FavoriCommerce WHERE pseudo = :pseudo AND id = :id";
+        $sql="SELECT * FROM FavoriCommerce WHERE pseudo = '".$pseudo."' AND idCommerce = :id";
         $stmt=$connexion->prepare($sql);
-        $stmt->bindParam(':pseudo', $pseudo);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         $response = new Response();
@@ -205,9 +204,9 @@
 	    return $response;
 	});
 
-    $app->get('/commerce/theme/{id}', function ($id) use ($app) {
+    $app->get('/commerce/theme/{id}/{localisation}', function ($id, $localisation) use ($app) {
 	   	$connexion=connexionbd();
-		$sql="SELECT * FROM Commerce WHERE id IN (SELECT idCommerce FROM Appartient WHERE idTheme = ".$id.") ORDER BY nom;";
+		$sql="SELECT * FROM Commerce WHERE id IN (SELECT idCommerce FROM Appartient WHERE idTheme = ".$id.") AND localisation='".$localisation."' ORDER BY nom;";
         $query = $connexion->query($sql);
         $data=null;
 		while ($donnees=$query->fetch()) {
@@ -516,6 +515,29 @@
 		$stmt=$connexion->prepare($sql);
 		$stmt->execute(array('pseudo'=>$data['pseudo'], 'idTheme'=>$data['idTheme']));
 		return $app->json($data, 201);
+    });
+
+    $app->post('/utilisateur/favoriCommerce/ajout', function (Request $request) use ($app) {
+		$data = [];
+	    if ($content = $request->getContent()) {
+	        $data = json_decode($content, true);
+	    }
+		$connexion=connexionbd();
+		$sql="INSERT INTO FavoriCommerce(pseudo, idCommerce) values (:pseudo, :idCommerce)";
+		$stmt=$connexion->prepare($sql);
+		return $stmt->execute(array('pseudo'=>$data['pseudo'], 'idCommerce'=>$data['idCommerce']));
+    });
+
+    $app->delete('/utilisateur/favoriCommerce/supprimer', function (Request $request) use ($app) {
+		$data = [];
+	    if ($content = $request->getContent()) {
+	        $data = json_decode($content, true);
+	    }
+		$connexion=connexionbd();
+        $pseudo = $data['pseudo'];
+		$sql="DELETE FROM FavoriCommerce WHERE pseudo=\"".$pseudo."\" AND idCommerce = :idCommerce";
+		$stmt=$connexion->prepare($sql);
+		return $stmt->execute(array('idCommerce'=>$data['idCommerce']));
     });
 
     $app->post('/utilisateur/choisiVille', function (Request $request) use ($app) {
