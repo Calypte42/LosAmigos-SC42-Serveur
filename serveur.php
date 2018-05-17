@@ -195,7 +195,6 @@
 
         $sql="SELECT * FROM Commerce WHERE id IN (SELECT idCommerce FROM FavoriCommerce WHERE pseudo = '".$pseudo."')";
         $stmt=$connexion->prepare($sql);
-        $stmt->bindParam(':id', $id);
         $stmt->execute();
         $response = new Response();
         $response->setContent(json_encode(utf8ize($stmt->fetch(PDO::FETCH_OBJ))));
