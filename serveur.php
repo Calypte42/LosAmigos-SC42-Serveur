@@ -194,13 +194,19 @@
         $connexion=connexionbd();
 
         $sql="SELECT * FROM Commerce WHERE id IN (SELECT idCommerce FROM FavoriCommerce WHERE pseudo = '".$pseudo."')";
-        $stmt=$connexion->prepare($sql);
-        $stmt->execute();
-        $response = new Response();
-        $response->setContent(json_encode(utf8ize($stmt->fetch(PDO::FETCH_OBJ))));
-        return $sql;
-        //$response->headers->set('Content-Type', 'application/json');
-        //return $response;
+        $query = $connexion->query($sql);
+        $data=null;
+		while ($donnees=$query->fetch()) {
+			$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],
+            'pseudoCommercant'=>$donnees['pseudoCommercant'],
+            'localisation'=>$donnees['localisation'],
+            'longitude'=>$donnees['longitude'],
+            'latitude'=>$donnees['latitude']);
+		}
+	   	$response = new Response();
+	    $response->setContent(json_encode(utf8ize($data)));
+		$response->headers->set('Content-Type', 'application/json');
+	    return $response;
     });
 
 	/********************* GET - COMMERCES **************/
@@ -225,7 +231,9 @@
 		while ($donnees=$query->fetch()) {
 			$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],
             'pseudoCommercant'=>$donnees['pseudoCommercant'],
-            'localisation'=>$donnees['localisation']);
+            'localisation'=>$donnees['localisation'],
+            'longitude'=>$donnees['longitude'],
+            'latitude'=>$donnees['latitude']);
 		}
 	   	$response = new Response();
 	    $response->setContent(json_encode(utf8ize($data)));
