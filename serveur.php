@@ -194,6 +194,7 @@
         $connexion=connexionbd();
 
         $sql="SELECT * FROM Commerce WHERE id IN (SELECT idCommerce FROM FavoriCommerce WHERE pseudo = '".$pseudo."') ORDER BY nom;";
+        echo "$sql";
         $query = $connexion->query($sql);
         $data=null;
 		while ($donnees=$query->fetch()) {
