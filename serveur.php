@@ -707,7 +707,19 @@
 				return $response;
 		});
 
+// ----------------------- RAJOUT ADHERE -------------------------------------------
 
+$app->post('/adhere/adhesion', function (Request $request) use ($app) {
+$data = [];
+	if ($content = $request->getContent()) {
+			$data = json_decode($content, true);
+	}
+$connexion=connexionbd();
+$sql="INSERT INTO Adhere(pseudo,sujetReseau) values (:pseudo,:sujetReseau)";
+$stmt=$connexion->prepare($sql);
+$stmt->execute(array('pseudo'=>$data['pseudo'],'sujetReseau'=>$data['sujetReseau']));
+return $app->json($data, 201);
+});
 
 
 	$app->run();
