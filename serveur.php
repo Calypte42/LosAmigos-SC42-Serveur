@@ -198,8 +198,9 @@
         $stmt->execute();
         $response = new Response();
         $response->setContent(json_encode(utf8ize($stmt->fetch(PDO::FETCH_OBJ))));
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
+        return $sql;
+        //$response->headers->set('Content-Type', 'application/json');
+        //return $response;
     });
 
 	/********************* GET - COMMERCES **************/
