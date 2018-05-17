@@ -193,12 +193,12 @@
     $app->get('/utilisateur/listeFavorisCommerce/{pseudo}', function ($pseudo) use ($app) {
         $connexion=connexionbd();
 
-        $sql="SELECT * FROM Commerce WHERE id IN \(SELECT idCommerce FROM FavoriCommerce WHERE pseudo = '".$pseudo."'\)";
+        $sql="SELECT * FROM Commerce WHERE id IN (SELECT idCommerce FROM FavoriCommerce WHERE pseudo = '".$pseudo."') ORDER BY nom;";
         $query = $connexion->query($sql);
         $data=null;
 		while ($donnees=$query->fetch()) {
 			$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],
-            'pseudoCommercant'=>$donnees['pseudocommercant'],
+            'pseudoCommercant'=>$donnees['pseudoCommercant'],
             'localisation'=>$donnees['localisation'],
             'longitude'=>$donnees['longitude'],
             'latitude'=>$donnees['latitude']);
@@ -230,7 +230,7 @@
         $data=null;
 		while ($donnees=$query->fetch()) {
 			$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],
-            'pseudoCommercant'=>$donnees['pseudocommercant'],
+            'pseudoCommercant'=>$donnees['pseudoCommercant'],
             'localisation'=>$donnees['localisation'],
             'longitude'=>$donnees['longitude'],
             'latitude'=>$donnees['latitude']);
