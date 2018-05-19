@@ -268,11 +268,11 @@
 	    return $response;
 	});
 
-    $app->get('/commerce2/proximite/{localisation}/{latitude}/{longitude}', function ($localisation, $latitude, $longitude) use ($app) {
+    $app->get('/commerce/proximite/{localisation}/{latitude}/{longitude}', function ($localisation, $latitude, $longitude) use ($app) {
 	   	$connexion=connexionbd();
 	   	$formule="(6366*acos(cos(radians(".$latitude."))*cos(radians(`latitude`))*cos(radians(`longitude`) -radians(".$longitude."))+sin(radians(".$latitude."))*sin(radians(`latitude`))))";
 
-		$sql="SELECT nom,".$formule." AS dist, latitude, longitude FROM Commerce WHERE localisation = '".$localisation."' AND ".$formule." <= 10 ORDER BY dist ASC LIMIT 3";
+		$sql="SELECT nom,".$formule." AS dist, latitude, longitude FROM Commerce WHERE localication='".$localisation."' ".$formule." <= 10 ORDER BY dist ASC LIMIT 3";
 
 		$query = $connexion->query($sql);
 		while ($donnees=$query->fetch()) {
@@ -803,10 +803,10 @@ $app->get('/rechercheReseau/{localisation}/{pseudo}/{recherche}', function ($loc
 $app->get('/invitation/{pseudo}', function ($pseudo) use ($app) {
 		$connexion=connexionbd();
 
-	$sql="SELECT pseudo,sujet,description FROM Invitation,Reseau WHERE pseudo='".$pseudo."' AND sujet=sujetReseau";
+	$sql="SELECT pseudo,sujet,description,pseudoAdmin,localisation,visibilite FROM Invitation,Reseau WHERE pseudo='".$pseudo."' AND sujet=sujetReseau";
 	$query=$connexion->query($sql);
 		while ($donnees=$query->fetch()) {
-			$data[]=Array('pseudo'=>$donnees['pseudo'],'sujetReseau'=>$donnees['sujet'],'description'=>$donnees['description']);
+			$data[]=Array('pseudo'=>$donnees['pseudo'],'sujetReseau'=>$donnees['sujet'],'description'=>$donnees['description'],'pseudoAdmin'=> $donnees['pseudoAdmin'],'localisation'=>$donnees['localisation'],'visibilite'=>$donnees['visibilite']);
 		}
 		$response = new Response();
 		$response->setContent(json_encode(utf8ize($data)));
