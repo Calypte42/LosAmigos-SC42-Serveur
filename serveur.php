@@ -109,7 +109,7 @@
 	   	$connexion=connexionbd();
 	   	$formule="(6366*acos(cos(radians(".$latitude."))*cos(radians(`latitude`))*cos(radians(`longitude`) -radians(".$longitude."))+sin(radians(".$latitude."))*sin(radians(`latitude`))))";
 
-		$sql="SELECT nom,".$formule." AS dist, latitude, longitude FROM Lieu WHERE ".$formule." <= 10 ORDER BY dist ASC LIMIT 3";
+		$sql="SELECT nom, ".$formule." AS dist, latitude, longitude FROM Lieu WHERE ".$formule." <= 10 ORDER BY dist ASC LIMIT 3";
 		$query = $connexion->query($sql);
 		while ($donnees=$query->fetch()) {
 			$data[]=Array('nom'=>$donnees['nom'],'dist' => $donnees['dist'],'latitude'=>$donnees['latitude'],'longitude'=>$donnees['longitude']);
@@ -271,11 +271,12 @@
 	   	$connexion=connexionbd();
 	   	$formule="(6366*acos(cos(radians(".$latitude."))*cos(radians(`latitude`))*cos(radians(`longitude`) -radians(".$longitude."))+sin(radians(".$latitude."))*sin(radians(`latitude`))))";
 
-		$sql="SELECT nom,".$formule." AS dist, latitude, longitude FROM Commerce WHERE localication='".$localisation."' AND ".$formule." <= 10 ORDER BY dist ASC LIMIT 3";
-        echo $sql;
+		$sql="SELECT id, pseudoCommercant, localisation, nom,".$formule." AS dist, latitude, longitude FROM Commerce WHERE  ".$formule." <= 10 ORDER BY dist ASC LIMIT 3";
+
 		$query = $connexion->query($sql);
+        $data = null;
 		while ($donnees=$query->fetch()) {
-			$data[]=Array('nom'=>$donnees['nom'],'dist' => $donnees['dist'],'latitude'=>$donnees['latitude'],'longitude'=>$donnees['longitude']);
+			$data[]=Array('id'=>$donnees['id'], 'localisation' =>$donnees['localisation'],'pseudoCommercant'=>$donnees['pseudoCommercant'], 'nom'=>$donnees['nom'],'dist' => $donnees['dist'],'latitude'=>$donnees['latitude'],'longitude'=>$donnees['longitude']);
 		}
 	   	$response = new Response();
 	    $response->setContent(json_encode(utf8ize($data)));
