@@ -274,6 +274,7 @@
 		$sql="SELECT nom,".$formule." AS dist, latitude, longitude FROM Commerce WHERE localisation='".$localisation."' AND ".$formule." <= 10 ORDER BY dist ASC LIMIT 3";
 
 		$query = $connexion->query($sql);
+        $data = null;
 		while ($donnees=$query->fetch()) {
 			$data[]=Array('nom'=>$donnees['nom'],'dist' => $donnees['dist'],'latitude'=>$donnees['latitude'],'longitude'=>$donnees['longitude']);
 		}
