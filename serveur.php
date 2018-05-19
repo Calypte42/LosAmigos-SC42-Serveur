@@ -1,4 +1,4 @@
-<?php
+pseudoCommercant<?php
 	require_once __DIR__.'/vendor/autoload.php';
 	require_once 'connexionBDD.php';
 	use Symfony\Component\HttpFoundation\Request;
@@ -197,7 +197,7 @@
         $data=null;
 		while ($donnees=$query->fetch()) {
 			$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],
-            'ercant'=>$donnees['ercant'],
+            'pseudoCommercant'=>$donnees['pseudoCommercant'],
             'localisation'=>$donnees['localisation'],
             'longitude'=>$donnees['longitude'],
             'latitude'=>$donnees['latitude']);
@@ -229,7 +229,7 @@
         $data=null;
 		while ($donnees=$query->fetch()) {
 			$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],
-            'ercant'=>$donnees['ercant'],
+            'pseudoCommercant'=>$donnees['pseudoCommercant'],
             'localisation'=>$donnees['localisation'],
             'longitude'=>$donnees['longitude'],
             'latitude'=>$donnees['latitude']);
