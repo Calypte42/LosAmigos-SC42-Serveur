@@ -109,7 +109,7 @@
 	   	$connexion=connexionbd();
 	   	$formule="(6366*acos(cos(radians(".$latitude."))*cos(radians(`latitude`))*cos(radians(`longitude`) -radians(".$longitude."))+sin(radians(".$latitude."))*sin(radians(`latitude`))))";
 
-		$sql="SELECT id, nom, ercant, ".$formule." AS dist, latitude, longitude FROM Lieu WHERE ".$formule." <= 10 ORDER BY dist ASC LIMIT 3";
+		$sql="SELECT id, nom, pseudoCommercant, ".$formule." AS dist, latitude, longitude FROM Lieu WHERE ".$formule." <= 10 ORDER BY dist ASC LIMIT 3";
 		$query = $connexion->query($sql);
 		while ($donnees=$query->fetch()) {
 			$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],'pseudoCommercant'=>$donnees['pseudoCommercant'],'dist' => $donnees['dist'],'latitude'=>$donnees['latitude'],'longitude'=>$donnees['longitude']);
