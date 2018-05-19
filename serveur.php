@@ -806,7 +806,7 @@ $app->get('/invitation/{pseudo}', function ($pseudo) use ($app) {
 	$sql="SELECT pseudo,sujet,description,pseudoAdmin,localisation,visibilite FROM Invitation,Reseau WHERE pseudo='".$pseudo."' AND sujet=sujetReseau";
 	$query=$connexion->query($sql);
 		while ($donnees=$query->fetch()) {
-			$data[]=Array('pseudo'=>$donnees['pseudo'],'sujetReseau'=>$donnees['sujet'],'description'=>$donnees['description']);
+			$data[]=Array('pseudo'=>$donnees['pseudo'],'sujetReseau'=>$donnees['sujet'],'description'=>$donnees['description'],'pseudoAdmin'=> $donnees['pseudoAdmin'],'localisation'=>$donnees['localisation'],'visibilite'=>$donnees['visibilite']);
 		}
 		$response = new Response();
 		$response->setContent(json_encode(utf8ize($data)));
