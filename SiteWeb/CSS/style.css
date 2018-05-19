@@ -1,0 +1,253 @@
+/* pour visualisation des boîtes */
+/*.row {
+    margin-bottom: 15px;  marge avec l'élément en dessous
+}*/
+/* pour visualisation des boîtes bootstrap
+.row [class^="col-"] {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #eee;
+    border: 1px solid #ddd;
+    background-color: rgba(86,61,124,.15);
+    border: 1px solid rgba(86,61,124,.2);
+}*/
+
+/* login */
+
+#authentification {
+	padding: 50px;
+	/*position: center;*/
+}
+
+h4 {
+	/*border:0 solid #fff;*/
+	/*border-bottom-width:1px;*/
+	padding-bottom:10px;
+	text-align: center;
+}
+.form-login {
+	background: #EDEDED;
+	padding-top: 10px;
+	padding-bottom: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+	border-radius: 15px;
+	border-color:#d2d2d2;
+	border-width: 5px;
+	/*box-shadow:0 1px 0 #cfcfcf;*/
+
+}
+
+.form-control {
+	border-radius: 10px;
+}
+
+.wrapper {
+	text-align: center;
+}
+
+
+/* ENTETE */
+
+.navbar{
+	width:100%;
+	/*background:#a74219;*/
+	background:#6e523f ;
+}
+
+.nav.navbar-nav li a{
+	color:#eeeeec;
+}
+
+.nav.navbar-nav li a:hover{
+	color:#000000;
+}
+
+/* MENU VERTICAL GAUCHE */
+
+.sidenav {
+    width: auto;
+    /*position: fixed;*/
+    /*z-index: 1;*/
+    /*top: 20px;*/
+    /*left: 10px;*/
+    overflow-x: hidden;
+  /*  padding: 8px 0;*/
+		/*margin-bottom: 40px; /* marge avec elt du dessous */
+}
+
+.sidenav a {
+		background:#6e523f;
+  	padding: 15px 8px 15px 16px;
+    text-decoration: none;
+    font-size: 15px;
+    color:#eeeeec;
+    display: block;
+		border-top:2px solid white;
+		border-bottom: 2px solid white;
+}
+
+.sidenav a:hover {
+    color:#000000;
+}
+
+/* boites du menu
+#menuVertical > ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	vertical-align: baseline;
+	line-height: 1;
+	display: block;
+	position: relative;
+	width: 150px;
+}
+
+#menuVertical > ul li {
+	display: block;
+	position: relative;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+*/
+/* disposition et style des menus
+#menuVertical > ul li a {
+
+	display: block;
+	position: relative;
+	margin: 0;
+	border-top:2px solid white;
+	border-bottom: 2px solid white;
+	padding: 11px 20px;
+
+	color: black;
+	text-decoration: none;
+	text-transform: uppercase;
+	font-size: 16px;
+	font-weight: 300;
+  	background: #babdb6;
+}
+*/
+/* survol menu et sous menu
+#menuVertical > ul li > a:hover,
+#menuVertical > ul li:hover > a {
+	color: #ffffff;*/
+	/*text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+	background: #1b1b1b;
+
+	border-color: transparent;
+	text-decoration: none;
+}
+*/
+/* creation de la fleche indicant les sous-menus
+#menuVertical > ul .has-sub > a::after {
+	content: "";
+	position: absolute;
+	top: 16px;
+	right: 10px;
+	width: 0px;
+	height: 0px;
+
+	border: 4px solid transparent;
+	border-left: 4px solid black;
+}
+*/
+/*#menuVertical > ul li:hover > a::before {
+  border-left: 4px solid rgba(0, 0, 0, 0.3) ;
+}*/
+
+/* FIELDSET */
+
+/*#formulaire{
+	padding-left: 15px;
+}*/
+
+
+fieldset
+{
+	background-color:none;
+	max-width:500px;
+	margin:16px;
+	border:2px solid black;
+}
+
+fieldset.scheduler-border {
+	border: 1px groove #ddd !important;
+	padding: 0 1.4em 1.4em 1.4em !important; /*haut, bas, droite, gauche*/
+	margin: 0 0 1.5em 1.5em !important;
+	-webkit-box-shadow:  0px 0px 0px 0px #000;
+	box-shadow:  0px 0px 0px 0px #000;
+}
+
+legend.scheduler-border {
+  font-size: 1.2em !important;
+  font-weight: bold !important;
+  text-align: left !important;
+  width:auto;
+  padding:0 10px;
+  border-bottom:none;
+    }
+
+
+/* Carousel de la page d'accueil */
+
+body, html {
+	height: 100%;
+	margin: 0;
+}
+
+.carousel-inner > .item > img {
+	margin-top:50px;
+	width:100%;
+  height:728px;
+}
+.carousel-indicators li {
+		border:solid 1px;
+		border-color: black;
+    background-color: lightgrey;
+		box-shadow: inset 1px 1px 1px 1px rgba(0,0,0,0.5);
+}
+.carousel-indicators .active {
+    background-color: grey;
+}
+
+/*.bg {
+	background-image: url("../Images/Grotte1.jpg");
+	width: 100%;
+	height: 480px;
+	background-repeat: no-repeat;
+	background-size: 100%100%;
+	border: 1px solid black;
+
+}*/
+
+/* titre BD
+
+.jumbotron {
+	background: #faeda0; pluS beige
+	background: #ffffcc;
+}*/
+
+/* FOOTER */
+
+/*#pied1{
+	position:absolute;
+	bottom:0px;
+	width:100%;
+	background-color: black;
+	color: #ffffff;
+	background:#000000;
+}
+
+#pied2{
+	width:100%;
+	background-color: black;
+	color: #ffffff;
+	background:#000000;
+}*/
+/*
+.container{
+	position: relative;
+	display: inline-block;
+}*/

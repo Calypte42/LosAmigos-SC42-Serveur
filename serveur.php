@@ -781,5 +781,21 @@ return $app->json($data, 201);
 });
 
 
+// Rajout rechercheReseau
+
+$app->get('/rechercheReseau/{localisation}/{pseudo}/{recherche}', function ($localisation,$pseudo,$recherche) use ($app) {
+		$connexion=connexionbd();
+
+	$sql="SELECT * FROM Reseau WHERE localisation = '".$localisation."' AND visibilite=1 AND pseudoAdmin!='".$pseudo."' AND LOWER (sujet) LIKE '%". strtolower($recherche) ."%' AND sujet NOT IN (SELECT sujetReseau FROM Adhere WHERE pseudo='".$pseudo."')";
+	$query=$connexion->query($sql);
+		while ($donnees=$query->fetch()) {
+			$data[]=Array('sujet'=>$donnees['sujet'],'description'=>$donnees['description'],'pseudoAdmin'=>$donnees['pseudoAdmin'],'localisation'=>$donnees['localisation'],'visibilite'=>$donnees['visibilite']);
+		}
+		$response = new Response();
+		$response->setContent(json_encode(utf8ize($data)));
+	$response->headers->set('Content-Type', 'application/json');
+		return $response;
+});
+
 	$app->run();
 ?>
