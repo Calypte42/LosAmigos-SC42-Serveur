@@ -813,5 +813,18 @@ $app->get('/invitation/{pseudo}', function ($pseudo) use ($app) {
 		return $response;
 });
 
+
+// A modifier ? pas correcte de supprimer par un get
+
+$app->get('/SuppressionInvitation/{pseudo}/{sujet}', function ($pseudo,$sujet) use ($app) {
+		$connexion=connexionbd();
+
+	$sql="DELETE FROM Invitation WHERE pseudo='".$pseudo."' AND sujetReseau='".$sujet."'";
+	$stmt=$connexion->prepare($sql);
+	$stmt->execute();
+		$response = new Response();
+		return $response;
+});
+
 	$app->run();
 ?>
