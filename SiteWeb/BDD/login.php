@@ -1,6 +1,6 @@
 <?php
 $host = "localhost";
-$username = "root";
-$password = "root";
+$username = "smartcity";
+$password = "smartcity";
 $dbname = "smartcity";
  ?>
