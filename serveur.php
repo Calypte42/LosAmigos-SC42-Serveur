@@ -271,7 +271,7 @@
 	   	$connexion=connexionbd();
 	   	$formule="(6366*acos(cos(radians(".$latitude."))*cos(radians(`latitude`))*cos(radians(`longitude`) -radians(".$longitude."))+sin(radians(".$latitude."))*sin(radians(`latitude`))))";
 
-		$sql="SELECT nom,".$formule." AS dist, latitude, longitude FROM Commerce WHERE localisation='".$localisation."' AND ".$formule." <= 10 ORDER BY dist ASC LIMIT 3";
+		$sql="SELECT nom,".$formule." AS dist, latitude, longitude FROM Commerce WHERE  ".$formule." <= 10 ORDER BY dist ASC LIMIT 3";
 
 		$query = $connexion->query($sql);
         $data = null;
