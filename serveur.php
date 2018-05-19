@@ -110,7 +110,6 @@
 	   	$formule="(6366*acos(cos(radians(".$latitude."))*cos(radians(`latitude`))*cos(radians(`longitude`) -radians(".$longitude."))+sin(radians(".$latitude."))*sin(radians(`latitude`))))";
 
 		$sql="SELECT nom,".$formule." AS dist, latitude, longitude FROM Lieu WHERE ".$formule." <= 10 ORDER BY dist ASC LIMIT 3";
-        echo $sql;
 		$query = $connexion->query($sql);
 		while ($donnees=$query->fetch()) {
 			$data[]=Array('nom'=>$donnees['nom'],'dist' => $donnees['dist'],'latitude'=>$donnees['latitude'],'longitude'=>$donnees['longitude']);
@@ -273,7 +272,7 @@
 	   	$formule="(6366*acos(cos(radians(".$latitude."))*cos(radians(`latitude`))*cos(radians(`longitude`) -radians(".$longitude."))+sin(radians(".$latitude."))*sin(radians(`latitude`))))";
 
 		$sql="SELECT nom,".$formule." AS dist, latitude, longitude FROM Commerce WHERE localication='".$localisation."' ".$formule." <= 10 ORDER BY dist ASC LIMIT 3";
-
+        echo $sql;
 		$query = $connexion->query($sql);
 		while ($donnees=$query->fetch()) {
 			$data[]=Array('nom'=>$donnees['nom'],'dist' => $donnees['dist'],'latitude'=>$donnees['latitude'],'longitude'=>$donnees['longitude']);
