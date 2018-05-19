@@ -268,7 +268,7 @@
 	    return $response;
 	});
 
-    $app->get('/commerce/proximite/{localisation}/{latitude}/{longitude}', function ($localisation, $latitude, $longitude) use ($app) {
+    $app->get('/commerce2/proximite/{localisation}/{latitude}/{longitude}', function ($localisation, $latitude, $longitude) use ($app) {
 	   	$connexion=connexionbd();
 	   	$formule="(6366*acos(cos(radians(".$latitude."))*cos(radians(`latitude`))*cos(radians(`longitude`) -radians(".$longitude."))+sin(radians(".$latitude."))*sin(radians(`latitude`))))";
 
