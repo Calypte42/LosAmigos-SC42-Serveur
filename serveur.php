@@ -798,5 +798,22 @@ $app->get('/rechercheReseau/{localisation}/{pseudo}/{recherche}', function ($loc
 		return $response;
 });
 
+
+// Rajout invitation
+
+$app->get('/invitation/{pseudo}', function ($pseudo) use ($app) {
+		$connexion=connexionbd();
+
+	$sql="SELECT pseudo,sujet,description FROM Invitation,Reseau WHERE pseudo='".$pseudo."' AND sujet=sujetReseau";
+	$query=$connexion->query($sql);
+		while ($donnees=$query->fetch()) {
+			$data[]=Array('pseudo'=>$donnees['pseudo'],'sujetReseau'=>$donnees['sujet'],'description'=>$donnees['description']);
+		}
+		$response = new Response();
+		$response->setContent(json_encode(utf8ize($data)));
+	$response->headers->set('Content-Type', 'application/json');
+		return $response;
+});
+
 	$app->run();
 ?>

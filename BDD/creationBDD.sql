@@ -176,7 +176,13 @@ CREATE TABLE Publicite (
       REFERENCES Lieu(nom)
 );
 
-
+CREATE TABLE Invitation (
+  pseudo varchar(20) NOT NULL,
+  sujetReseau varchar(100) NOT NULL,
+  CONSTRAINT Invitation_PK PRIMARY KEY (pseudo,sujetReseau),
+  CONSTRAINT Invit_pseudo_FK FOREIGN KEY (pseudo) REFERENCES Utilisateur(pseudo),
+  CONSTRAINT Invit_sujetReseau_FK FOREIGN KEY (sujetReseau) REFERENCES Reseau(sujet)
+);
 
 INSERT INTO `Lieu` (`nom`, `latitude`, `longitude`) VALUES
 ('AAST', '43.283333', '-0.083333'),
