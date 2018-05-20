@@ -834,7 +834,7 @@ $app->get('/listeReseauAdmin/{pseudo}', function ($pseudo) use ($app) {
 	$sql="SELECT sujet,description,pseudoAdmin,localisation,visibilite FROM Reseau WHERE pseudoAdmin='".$pseudo."'";
 	$query=$connexion->query($sql);
 		while ($donnees=$query->fetch()) {
-			$data[]=Array('sujetReseau'=>$donnees['sujet'],'description'=>$donnees['description'],'pseudoAdmin'=> $donnees['pseudoAdmin'],'localisation'=>$donnees['localisation'],'visibilite'=>$donnees['visibilite']);
+			$data[]=Array('sujet'=>$donnees['sujet'],'description'=>$donnees['description'],'pseudoAdmin'=> $donnees['pseudoAdmin'],'localisation'=>$donnees['localisation'],'visibilite'=>$donnees['visibilite']);
 		}
 		$response = new Response();
 		$response->setContent(json_encode(utf8ize($data)));
