@@ -375,7 +375,7 @@
 		//calcul age
 		$age = (time() - strtotime($user['dateNaissance'])) / 3600 / 24 / 365;
 
-		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme FROM Utilisateur u, Annonce ann, ListeAnnonce l, Apprecie ap WHERE u.pseudo = ap.pseudo AND l.theme = ap.theme AND ap.pseudo = :pseudo AND :age >= ageMin AND :age <= ageMax AND (sexe = :sexe OR sexe = 'Mixte)'";
+		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme FROM Utilisateur u, Annonce ann, ListeAnnonce l, Apprecie ap WHERE u.pseudo = ap.pseudo AND l.idtheme = ap.idtheme AND ap.pseudo = :pseudo AND :age >= ageMin AND :age <= ageMax AND (sexe = :sexe OR sexe = 'Mixte')";
 		$stmt=$connexion->prepare($sql);
 		$stmt->bindParam(':localisation', $localisation);
 		$stmt->bindParam(':pseudo', $pseudo);
