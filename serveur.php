@@ -71,7 +71,7 @@
 			$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],'idNomPere'=>$donnees['idNomPere']);
 		}
 	   	$response = new Response();
-	    $response->setContent(json_encode(utf8ize($data)));
+	    $response->setContent(json_encode($data));
 		$response->headers->set('Content-Type', 'application/json');
 	    return $response;
 	});
@@ -85,7 +85,7 @@
 			$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],'idNomPere'=>$donnees['idNomPere']);
 		}
 	   	$response = new Response();
-	    $response->setContent(json_encode(utf8ize($data)));
+	    $response->setContent(json_encode($data));
 		$response->headers->set('Content-Type', 'application/json');
 	    return $response;
 	});
@@ -262,7 +262,7 @@
 		$stmt->bindParam(':theme', $theme);
 		$stmt->execute();
 	   	$response = new Response();
-	    $response->setContent(json_encode(utf8ize($stmt->fetch(PDO::FETCH_OBJ))));
+	    $response->setContent(json_encode($stmt->fetch(PDO::FETCH_OBJ)));
 		$response->headers->set('Content-Type', 'application/json');
 	    return $response;
 	});
