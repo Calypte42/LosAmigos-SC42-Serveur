@@ -827,5 +827,37 @@ $app->get('/SuppressionInvitation/{pseudo}/{sujet}', function ($pseudo,$sujet) u
 		return $response;
 });
 
+
+$app->get('/listeReseauAdmin/{pseudo}', function ($pseudo) use ($app) {
+		$connexion=connexionbd();
+
+	$sql="SELECT sujet,description,pseudoAdmin,localisation,visibilite FROM Reseau WHERE pseudoAdmin='".$pseudo."'";
+	$query=$connexion->query($sql);
+		while ($donnees=$query->fetch()) {
+			$data[]=Array('sujetReseau'=>$donnees['sujet'],'description'=>$donnees['description'],'pseudoAdmin'=> $donnees['pseudoAdmin'],'localisation'=>$donnees['localisation'],'visibilite'=>$donnees['visibilite']);
+		}
+		$response = new Response();
+		$response->setContent(json_encode(utf8ize($data)));
+	$response->headers->set('Content-Type', 'application/json');
+		return $response;
+});
+
+
+
+// ----------------------- RAJOUT ENVOYER INVIT -------------------------------------------
+
+$app->post('/envoiInvit', function (Request $request) use ($app) {
+$data = [];
+	if ($content = $request->getContent()) {
+			$data = json_decode($content, true);
+	}
+$connexion=connexionbd();
+$sql="INSERT INTO Invitation(pseudo,sujetReseau) values (:pseudo,:sujetReseau)";
+$stmt=$connexion->prepare($sql);
+$stmt->execute(array('pseudo'=>$data['pseudo'],'sujetReseau'=>$data['sujetReseau']));
+return $app->json($data, 201);
+});
+
+
 	$app->run();
 ?>
