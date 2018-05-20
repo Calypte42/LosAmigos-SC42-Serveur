@@ -375,15 +375,14 @@
 		//calcul age
 		$age = (time() - strtotime($user['dateNaissance'])) / 3600 / 24 / 365;
 
-		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme FROM Utilisateur u, Annonce ann, ListeAnnonce l, Apprecie ap WHERE u.pseudo = ap.pseudo AND l.idtheme = ap.idtheme AND ap.pseudo = :pseudo AND :age >= ageMin AND :age <= ageMax AND (sexe = :sexe OR sexe = 'Mixte')";
-		$stmt=$connexion->prepare($sql);
-		$stmt->bindParam(':localisation', $localisation);
-		$stmt->bindParam(':pseudo', $pseudo);
-		$stmt->bindParam(':age', $age);
-		$stmt->bindParam(':sexe', $sexe);
-		$stmt->execute();
+		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme FROM Utilisateur u, Annonce ann, ListeAnnonce l, Apprecie ap WHERE u.pseudo = ap.pseudo AND l.idtheme = ap.idtheme AND ap.pseudo = '$pseudo' AND $age >= ageMin AND $age <= ageMax AND (sexe = '$sexe' OR sexe = 'Mixte')";
+        $data = null;
+        $query=$connexion->query($sql);
+			while ($donnees=$query->fetch()) {
+				$data[]=Array('id'=>$donnees['id'],'titre'=>$donnees['titre'],'contenu'=>$donnees['contenu'],'idCommerce'=>$donnees['idCommerce'],'idTheme'=>$donnees['idTheme']);
+			}
 	   	$response = new Response();
-	    $response->setContent(json_encode($stmt->fetch(PDO::FETCH_OBJ)));
+	    $response->setContent(json_encode($data));
 		$response->headers->set('Content-Type', 'application/json');
 	    return $response;
 	});
