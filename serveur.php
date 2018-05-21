@@ -564,7 +564,7 @@
 		return $stmt->execute(array('pseudo'=>$data['pseudo'], 'idCommerce'=>$data['idCommerce']));
     });
 
-    $app->delete('/utilisateur/favoriCommerce/supprimer', function (Request $request) use ($app) {
+    $app->get('/utilisateur/favoriCommerce/supprimer', function (Request $request) use ($app) {
 		$data = [];
 	    if ($content = $request->getContent()) {
 	        $data = json_decode($content, true);
