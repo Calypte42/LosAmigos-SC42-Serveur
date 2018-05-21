@@ -564,16 +564,12 @@
 		return $stmt->execute(array('pseudo'=>$data['pseudo'], 'idCommerce'=>$data['idCommerce']));
     });
 
-    $app->get('/utilisateur/favoriCommerce/supprimer', function (Request $request) use ($app) {
-		$data = [];
-	    if ($content = $request->getContent()) {
-	        $data = json_decode($content, true);
-	    }
-		$connexion=connexionbd();
-        $pseudo = $data['pseudo'];
-		$sql="DELETE FROM FavoriCommerce WHERE pseudo=\"".$pseudo."\" AND idCommerce = :idCommerce";
-		$stmt=$connexion->prepare($sql);
-		return $stmt->execute(array('idCommerce'=>$data['idCommerce']));
+    $app->get('/utilisateur/favoriCommerce/supprimer/{pseudo}/{idCommerce}', function ($pseudo, $idCommerce) use ($app) {
+        $connexion=connexionbd();
+
+	    $sql="DELETE FROM FavoriCommerce WHERE pseudo='".$pseudo."' AND idCommerce = $idCommerce";
+	    $stmt=$connexion->prepare($sql);
+	    return $stmt->execute();
     });
 
     $app->post('/utilisateur/choisiVille', function (Request $request) use ($app) {
