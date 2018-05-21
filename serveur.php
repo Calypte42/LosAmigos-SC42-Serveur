@@ -362,7 +362,7 @@
 
 
 	/******** Methode importante de filtrage des annonces par themes, par sexe et par categorie d'age ***************/
-	$app->get('/commerce/filtre/{pseudo}/{localisation}', function ($pseudo, $localisation) use ($app) {
+	$app->get('/annonces/filtre/{pseudo}/{localisation}', function ($pseudo, $localisation) use ($app) {
 	   	$connexion=connexionbd();
 	   	//recuperer l'utilisateur
 	   	$sql="SELECT * FROM Utilisateur WHERE pseudo = :pseudo";
@@ -375,7 +375,22 @@
 		//calcul age
 		$age = (time() - strtotime($user['dateNaissance'])) / 3600 / 24 / 365;
 
-		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Utilisateur u, Commerce c, Annonce ann, ListeAnnonce l, Apprecie ap WHERE u.pseudo = ap.pseudo AND l.idtheme = ap.idtheme AND c.id = l.idCommerce AND ap.pseudo = '$pseudo' AND $age >= ageMin AND $age <= ageMax AND (sexe = '$sexe' OR sexe = 'Mixte')";
+		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Utilisateur u, Commerce c, Annonce ann, ListeAnnonce l, Apprecie ap WHERE u.pseudo = ap.pseudo AND l.idtheme = ap.idtheme AND c.localisation = '$localisation' AND c.id = l.idCommerce AND ap.pseudo = '$pseudo' AND $age >= ageMin AND $age <= ageMax AND (sexe = '$sexe' OR sexe = 'Mixte')";
+        $data = null;
+        $query=$connexion->query($sql);
+			while ($donnees=$query->fetch()) {
+				$data[]=Array('id'=>$donnees['id'],'titre'=>$donnees['titre'],'contenu'=>$donnees['contenu'],'idCommerce'=>$donnees['idCommerce'],'idTheme'=>$donnees['idTheme'],'nomCommerce'=>$donnees['nomCommerce']);
+			}
+	   	$response = new Response();
+	    $response->setContent(json_encode($data));
+		$response->headers->set('Content-Type', 'application/json');
+	    return $response;
+	});
+
+    $app->get('/annonces/{idCommerce}', function ($idCommerce) use ($app) {
+	   	$connexion=connexionbd();
+
+		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Commerce c, Annonce ann, ListeAnnonce l WHERE l.idCommerce = $idCommerce AND c.id = l.idCommerce";
         $data = null;
         $query=$connexion->query($sql);
 			while ($donnees=$query->fetch()) {
