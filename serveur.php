@@ -71,7 +71,7 @@
 			$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],'idNomPere'=>$donnees['idNomPere']);
 		}
 	   	$response = new Response();
-	    $response->setContent(json_encode(utf8ize($data)));
+	    $response->setContent(json_encode($data));
 		$response->headers->set('Content-Type', 'application/json');
 	    return $response;
 	});
@@ -85,7 +85,7 @@
 			$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],'idNomPere'=>$donnees['idNomPere']);
 		}
 	   	$response = new Response();
-	    $response->setContent(json_encode(utf8ize($data)));
+	    $response->setContent(json_encode($data));
 		$response->headers->set('Content-Type', 'application/json');
 	    return $response;
 	});
@@ -200,7 +200,13 @@
             'pseudoCommercant'=>$donnees['pseudoCommercant'],
             'localisation'=>$donnees['localisation'],
             'longitude'=>$donnees['longitude'],
-            'latitude'=>$donnees['latitude']);
+            'latitude'=>$donnees['latitude'],
+            'numeroTelephone'=>$donnees['numeroTelephone'],
+            'adresse'=>$donnees['adresse'],
+            'description'=>$donnees['description'],
+            'horaires'=>$donnees['horaires'],
+            'lienImage'=>$donnees['lienImage']
+            );
 		}
 	   	$response = new Response();
 	    $response->setContent(json_encode(utf8ize($data)));
@@ -217,7 +223,7 @@
 		$stmt->bindParam(':id', $id);
 		$stmt->execute();
 	   	$response = new Response();
-	    $response->setContent(json_encode(utf8ize($stmt->fetch(PDO::FETCH_OBJ))));
+	    $response->setContent(json_encode($stmt->fetch(PDO::FETCH_OBJ)));
 		$response->headers->set('Content-Type', 'application/json');
 	    return $response;
 	});
@@ -235,7 +241,7 @@
             'latitude'=>$donnees['latitude']);
 		}
 	   	$response = new Response();
-	    $response->setContent(json_encode(utf8ize($data)));
+	    $response->setContent(json_encode($data));
 		$response->headers->set('Content-Type', 'application/json');
 	    return $response;
 	});
@@ -248,9 +254,22 @@
 		$stmt->bindParam(':localisation', $localisation);
 		$stmt->execute();
 	   	$response = new Response();
-	    $response->setContent(json_encode(utf8ize($stmt->fetch(PDO::FETCH_OBJ))));
+	    $response->setContent(json_encode($stmt->fetch(PDO::FETCH_OBJ)));
 		$response->headers->set('Content-Type', 'application/json');
 	    return $response;
+	});
+
+	$app->post('/utilisateurModifie', function (Request $request) use ($app) {
+		$data = [];
+			if ($content = $request->getContent()) {
+					$data = json_decode($content, true);
+			}
+		$connexion=connexionbd();
+		$sql="UPDATE Utilisateur SET MDP = '".$data['MDP']."',dateNaissance ='".$data['dateNaissance']."',sexe =".$data['sexe'].",taille=".$data['taille'].",poids=".$data['poids']." WHERE pseudo = '".$data['pseudo']."'";
+		$stmt=$connexion->prepare($sql);
+		$stmt->bindParam(':pseudo', $data['pseudo']);
+		$stmt->execute(array('pseudo'=>$data['pseudo'], 'MDP'=>$data['MDP'], 'dateNaissance'=>$data['dateNaissance'], 'sexe'=>$data['sexe'],'taille'=>$data['taille'],'poids'=>$data['poids']));
+		return $app->json($data, 201);
 	});
 
 	$app->get('/commerce/{localisation}/{theme}', function ($localisation, $theme) use ($app) {
@@ -262,16 +281,16 @@
 		$stmt->bindParam(':theme', $theme);
 		$stmt->execute();
 	   	$response = new Response();
-	    $response->setContent(json_encode(utf8ize($stmt->fetch(PDO::FETCH_OBJ))));
+	    $response->setContent(json_encode($stmt->fetch(PDO::FETCH_OBJ)));
 		$response->headers->set('Content-Type', 'application/json');
 	    return $response;
 	});
 
-    $app->get('/commerce/proximite/{localisation}/{latitude}/{longitude}', function ($localisation, $latitude, $longitude) use ($app) {
+    $app->get('/commerce/proximite/{idTheme}/{localisation}/{latitude}/{longitude}', function ($idTheme, $localisation, $latitude, $longitude) use ($app) {
 	   	$connexion=connexionbd();
 	   	$formule="(6366*acos(cos(radians(".$latitude."))*cos(radians(`latitude`))*cos(radians(`longitude`) -radians(".$longitude."))+sin(radians(".$latitude."))*sin(radians(`latitude`))))";
 
-		$sql="SELECT id, pseudoCommercant, localisation, nom,".$formule." AS dist, latitude, longitude FROM Commerce WHERE  ".$formule." <= 10 ORDER BY dist ASC";
+		$sql="SELECT id, pseudoCommercant, localisation, nom,".$formule." AS dist, latitude, longitude FROM Commerce WHERE (id IN (SELECT idCommerce FROM Appartient WHERE idTheme = $idTheme)) AND localisation = '$localisation' AND ".$formule." <= 10 ORDER BY dist ASC";
 
 		$query = $connexion->query($sql);
         $data = null;
@@ -279,7 +298,7 @@
 			$data[]=Array('id'=>$donnees['id'], 'localisation' =>$donnees['localisation'],'pseudoCommercant'=>$donnees['pseudoCommercant'], 'nom'=>$donnees['nom'],'dist' => $donnees['dist'],'latitude'=>$donnees['latitude'],'longitude'=>$donnees['longitude']);
 		}
 	   	$response = new Response();
-	    $response->setContent(json_encode(utf8ize($data)));
+	    $response->setContent(json_encode($data));
 		$response->headers->set('Content-Type', 'application/json');
 	    return $response;
 	});
@@ -362,7 +381,7 @@
 
 
 	/******** Methode importante de filtrage des annonces par themes, par sexe et par categorie d'age ***************/
-	$app->get('/commerce/filtre/{pseudo}/{localisation}', function ($pseudo, $localisation) use ($app) {
+	$app->get('/annonces/filtre/{pseudo}/{localisation}', function ($pseudo, $localisation) use ($app) {
 	   	$connexion=connexionbd();
 	   	//recuperer l'utilisateur
 	   	$sql="SELECT * FROM Utilisateur WHERE pseudo = :pseudo";
@@ -375,15 +394,100 @@
 		//calcul age
 		$age = (time() - strtotime($user['dateNaissance'])) / 3600 / 24 / 365;
 
-		$sql="SELECT * FROM Utilisateur u, Annonce ann, ListeAnnonce l, Apprecie ap WHERE u.pseudo = ap.pseudo AND ann.id = c.idAnnonce AND l.theme = ap.theme WHERE pseudo = :pseudo AND localisation = :localisation AND :age >= ageMin AND :age <= ageMax AND sexe = :sexe OR sexe = 'Mixte'";
-		$stmt=$connexion->prepare($sql);
-		$stmt->bindParam(':localisation', $localisation);
-		$stmt->bindParam(':pseudo', $pseudo);
-		$stmt->bindParam(':age', $age);
-		$stmt->bindParam(':sexe', $sexe);
-		$stmt->execute();
+		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Utilisateur u, Commerce c, Annonce ann, ListeAnnonce l, Apprecie ap WHERE u.pseudo = ap.pseudo AND l.idtheme = ap.idtheme AND c.localisation = '$localisation' AND c.id = l.idCommerce AND ap.pseudo = '$pseudo' AND $age >= ageMin AND $age <= ageMax AND (sexe = '$sexe' OR sexe = 'Mixte')";
+        $data = null;
+        $query=$connexion->query($sql);
+			while ($donnees=$query->fetch()) {
+				$data[]=Array('id'=>$donnees['id'],'titre'=>$donnees['titre'],'contenu'=>$donnees['contenu'],'idCommerce'=>$donnees['idCommerce'],'idTheme'=>$donnees['idTheme'],'nomCommerce'=>$donnees['nomCommerce']);
+			}
 	   	$response = new Response();
-	    $response->setContent(json_encode(utf8ize($stmt->fetch(PDO::FETCH_OBJ))));
+	    $response->setContent(json_encode($data));
+		$response->headers->set('Content-Type', 'application/json');
+	    return $response;
+	});
+
+    $app->get('/annonces/idCommerce/{idCommerce}/{pseudo}', function ($idCommerce, $pseudo) use ($app) {
+	   	$connexion=connexionbd();
+
+        //recuperer l'utilisateur
+	   	$sql="SELECT * FROM Utilisateur WHERE pseudo = '$pseudo'";
+		$stmt=$connexion->prepare($sql);
+		$stmt->bindParam(':pseudo', $pseudo);
+		$stmt->execute();
+		$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        //calcul age
+		$age = (time() - strtotime($user['dateNaissance'])) / 3600 / 24 / 365;
+
+		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Commerce c, Annonce ann, ListeAnnonce l WHERE l.idCommerce = $idCommerce AND $age >= ageMin AND c.id = l.idCommerce";
+        $data = null;
+        $query=$connexion->query($sql);
+			while ($donnees=$query->fetch()) {
+				$data[]=Array('id'=>$donnees['id'],'titre'=>$donnees['titre'],'contenu'=>$donnees['contenu'],'idCommerce'=>$donnees['idCommerce'],'idTheme'=>$donnees['idTheme'],'nomCommerce'=>$donnees['nomCommerce']);
+			}
+	   	$response = new Response();
+	    $response->setContent(json_encode($data));
+		$response->headers->set('Content-Type', 'application/json');
+	    return $response;
+	});
+
+    $app->get('/annonces/favoris/{pseudo}', function ($pseudo) use ($app) {
+	   	$connexion=connexionbd();
+
+        //recuperer l'utilisateur
+	   	$sql="SELECT * FROM Utilisateur WHERE pseudo = '$pseudo'";
+		$stmt=$connexion->prepare($sql);
+		$stmt->bindParam(':pseudo', $pseudo);
+		$stmt->execute();
+		$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        //calcul age
+		$age = (time() - strtotime($user['dateNaissance'])) / 3600 / 24 / 365;
+
+		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Commerce c, Annonce ann, ListeAnnonce l, FavoriCommerce f WHERE l.idCommerce = f.idCommerce AND $age >= ageMin AND c.id = l.idCommerce AND f.pseudo = '$pseudo'";
+        $data = null;
+        $query=$connexion->query($sql);
+			while ($donnees=$query->fetch()) {
+				$data[]=Array('id'=>$donnees['id'],'titre'=>$donnees['titre'],'contenu'=>$donnees['contenu'],'idCommerce'=>$donnees['idCommerce'],'idTheme'=>$donnees['idTheme'],'nomCommerce'=>$donnees['nomCommerce']);
+			}
+	   	$response = new Response();
+	    $response->setContent(json_encode($data));
+		$response->headers->set('Content-Type', 'application/json');
+	    return $response;
+	});
+
+    $app->get('/annonces/toutes/{pseudo}', function ($pseudo) use ($app) {
+	   	$connexion=connexionbd();
+        //recuperer l'utilisateur
+	   	$sql="SELECT * FROM Utilisateur WHERE pseudo = '$pseudo'";
+		$stmt=$connexion->prepare($sql);
+		$stmt->bindParam(':pseudo', $pseudo);
+		$stmt->execute();
+		$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        //calcul age
+		$age = (time() - strtotime($user['dateNaissance'])) / 3600 / 24 / 365;
+
+		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Commerce c, Annonce ann, ListeAnnonce l, Choisi ch WHERE ch.pseudo = '$pseudo' AND $age >= ageMin AND c.localisation = ch.nomLieu AND ann.id = l.idAnnonce AND l.idCommerce = c.id";
+        $data = null;
+        $query=$connexion->query($sql);
+			while ($donnees=$query->fetch()) {
+				$data[]=Array('id'=>$donnees['id'],'titre'=>$donnees['titre'],'contenu'=>$donnees['contenu'],'idCommerce'=>$donnees['idCommerce'],'idTheme'=>$donnees['idTheme'],'nomCommerce'=>$donnees['nomCommerce']);
+			}
+	   	$response = new Response();
+	    $response->setContent(json_encode($data));
+		$response->headers->set('Content-Type', 'application/json');
+	    return $response;
+	});
+
+    $app->get('/annonce/{idAnnonce}', function ($idAnnonce) use ($app) {
+	   	$connexion=connexionbd();
+
+		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Commerce c, Annonce ann, ListeAnnonce l WHERE ann.id = $idAnnonce AND l.idAnnonce = ann.id AND c.id = l.idCommerce ";
+        $stmt=$connexion->prepare($sql);
+        $stmt->execute();
+	   	$response = new Response();
+	    $response->setContent(json_encode($stmt->fetch(PDO::FETCH_OBJ)));
 		$response->headers->set('Content-Type', 'application/json');
 	    return $response;
 	});
@@ -565,16 +669,12 @@
 		return $stmt->execute(array('pseudo'=>$data['pseudo'], 'idCommerce'=>$data['idCommerce']));
     });
 
-    $app->delete('/utilisateur/favoriCommerce/supprimer', function (Request $request) use ($app) {
-		$data = [];
-	    if ($content = $request->getContent()) {
-	        $data = json_decode($content, true);
-	    }
-		$connexion=connexionbd();
-        $pseudo = $data['pseudo'];
-		$sql="DELETE FROM FavoriCommerce WHERE pseudo=\"".$pseudo."\" AND idCommerce = :idCommerce";
-		$stmt=$connexion->prepare($sql);
-		return $stmt->execute(array('idCommerce'=>$data['idCommerce']));
+    $app->get('/utilisateur/favoriCommerce/supprimer/{pseudo}/{idCommerce}', function ($pseudo, $idCommerce) use ($app) {
+        $connexion=connexionbd();
+
+	    $sql="DELETE FROM FavoriCommerce WHERE pseudo='".$pseudo."' AND idCommerce = $idCommerce";
+	    $stmt=$connexion->prepare($sql);
+	    return $stmt->execute();
     });
 
     $app->post('/utilisateur/choisiVille', function (Request $request) use ($app) {

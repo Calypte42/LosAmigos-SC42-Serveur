@@ -44,11 +44,16 @@ CREATE TABLE Apprecie (
 
 CREATE TABLE Commerce (
   id int PRIMARY KEY AUTO_INCREMENT,
-  nom varchar(50),
-  pseudoCommercant varchar(20),
-  localisation varchar(30),
+  nom varchar(50) NOT NULL,
+  pseudoCommercant varchar(20) NOT NULL,
+  localisation varchar(30) NOT NULL,
   latitude varchar(50),
   longitude varchar(50),
+  numeroTelephone varchar(20),
+  adresse varchar(300),
+  description varchar(500),
+  horaires varchar(400),
+  lienImage varchar(200),
   CONSTRAINT pseudoCommercant_Commerce_FK FOREIGN KEY (pseudoCommercant)
     REFERENCES Utilisateur(pseudo),
   CONSTRAINT localisation_Commerce_FK FOREIGN KEY (localisation)
