@@ -406,7 +406,7 @@
 	    return $response;
 	});
 
-    $app->get('/annonces/{idCommerce}', function ($idCommerce) use ($app) {
+    $app->get('/annonces/{idCommerce}/{pseudo}', function ($idCommerce, $pseudo) use ($app) {
 	   	$connexion=connexionbd();
 
         //recuperer l'utilisateur
