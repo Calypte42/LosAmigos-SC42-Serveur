@@ -50,7 +50,7 @@
 	$app->get('/themesprincipaux', function () use ($app) {
 	   	$connexion=connexionbd();
 
-		$sql="SELECT * FROM Theme WHERE idNomPere is null";
+		$sql="SELECT * FROM Theme WHERE idNomPere is null AND nom <> 'Commerce'";
 
 		$query = $connexion->query($sql);
 		while ($donnees=$query->fetch()) {
