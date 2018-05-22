@@ -259,6 +259,19 @@
 	    return $response;
 	});
 
+	$app->post('/utilisateurModifie', function (Request $request) use ($app) {
+		$data = [];
+			if ($content = $request->getContent()) {
+					$data = json_decode($content, true);
+			}
+		$connexion=connexionbd();
+		$sql="UPDATE Utlisateur SET pseudo = :pseudo, MDP = :MDP,dateNaissance = :dateNaissance,sexe = :sexe,taille= :taille,poids= :poids WHERE pseudo = :pseudo";
+		$stmt=$connexion->prepare($sql);
+		$stmt->bindParam(':pseudo', $data['pseudo']);
+		$stmt->execute(array('pseudo'=>$data['pseudo'], 'MDP'=>$data['MDP'], 'dateNaissance'=>$data['dateNaissance'], 'sexe'=>$data['sexe'],'taille'=>$data['taille'],'poids'=>$data['poids']));
+		return $app->json($data, 201);
+	});
+
 	$app->get('/commerce/{localisation}/{theme}', function ($localisation, $theme) use ($app) {
 	   	$connexion=connexionbd();
 
