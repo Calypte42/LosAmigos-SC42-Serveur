@@ -1012,24 +1012,22 @@ $stmt->execute(array('pseudo'=>$data['pseudo'],'sujetReseau'=>$data['sujetReseau
 return $app->json($data, 201);
 });
 
+$app->get('/verifPseudo/{pseudo}', function ($pseudo) use ($app) {
+		$connexion=connexionbd();
+
+	$sql="SELECT COUNT(pseudo) as nombre FROM Utilisateur WHERE pseudo='".$pseudo."'";
+	$query=$connexion->query($sql);
+		while ($donnees=$query->fetch()) {
+			$data[]=Array('nombre'=>$donnees['nombre']);
+		}
+		$response = new Response();
+		$response->setContent(json_encode(utf8ize($data)));
+	$response->headers->set('Content-Type', 'application/json');
+		return $response;
+});
 
 	$app->run();
 
 
 
-
-
-	$app->get('/verifPseudo/{pseudo}', function ($pseudo) use ($app) {
-			$connexion=connexionbd();
-
-		$sql="SELECT COUNT(pseudo) as nombre FROM Utilisateur WHERE pseudo='".$pseudo."'";
-		$query=$connexion->query($sql);
-			while ($donnees=$query->fetch()) {
-				$data[]=Array('nombre'=>$donnees['nombre']);
-			}
-			$response = new Response();
-			$response->setContent(json_encode(utf8ize($data)));
-		$response->headers->set('Content-Type', 'application/json');
-			return $response;
-	});
 ?>
