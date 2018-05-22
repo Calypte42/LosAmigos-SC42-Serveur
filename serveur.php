@@ -610,8 +610,6 @@
 		$data = [];
 			if ($content = $request->getContent()) {
 					$data = json_decode($content, true);
-					$description=$data['description'];
-					echo "$description";
 			}
 		$connexion=connexionbd();
 		$sql="INSERT INTO Reseau(sujet,description,pseudoAdmin,localisation,visibilite) values (:sujet,:description,:pseudoAdmin,:localisation,:visibilite)";
@@ -841,6 +839,17 @@ $app->get('/SuppressionInvitation/{pseudo}/{sujet}', function ($pseudo,$sujet) u
 		return $response;
 });
 
+// A modifier ? pas correcte de supprimer par un get
+
+$app->get('/SuppressionAdhere/{pseudo}/{sujet}', function ($pseudo,$sujet) use ($app) {
+		$connexion=connexionbd();
+
+	$sql="DELETE FROM Adhere WHERE pseudo='".$pseudo."' AND sujetReseau='".$sujet."'";
+	$stmt=$connexion->prepare($sql);
+	$stmt->execute();
+		$response = new Response();
+		return $response;
+});
 
 $app->get('/listeReseauAdmin/{pseudo}', function ($pseudo) use ($app) {
 		$connexion=connexionbd();
