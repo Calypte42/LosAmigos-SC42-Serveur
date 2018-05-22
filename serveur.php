@@ -62,6 +62,21 @@
 	    return $response;
 	});
 
+	$app->get('/themesAffinage/{pseudo}', function ($pseudo) use ($app) {
+			$connexion=connexionbd();
+
+			$sql="SELECT id,pseudo,nom FROM Theme t, Apprecie a WHERE t.idNomPere = a.idTheme AND pseudo = '".$pseudo."'";
+
+			$query = $connexion->query($sql);
+			while ($donnees=$query->fetch()) {
+				$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'], 'pseudo' => $donnees['pseudo']);
+			}
+			$response = new Response();
+			$response->setContent(json_encode(utf8ize($data)));
+			$response->headers->set('Content-Type', 'application/json');
+			return $response;
+	});
+
     $app->get('/themes/listeThemesEnfant/id/{id}', function ($id) use ($app) {
 	   	$connexion=connexionbd();
 		$sql="SELECT * FROM Theme WHERE idNomPere = ".$id. " ORDER BY nom";
