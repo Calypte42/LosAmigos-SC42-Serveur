@@ -402,6 +402,21 @@
 	    return $response;
 	});
 
+    $app->get('/annonce/{idAnnonce}', function ($idAnnonce) use ($app) {
+	   	$connexion=connexionbd();
+
+		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Commerce c, Annonce ann, ListeAnnonce l WHERE ann.id = $idAnnonce AND l.idAnnonce = ann.id AND c.id = l.idCommerce ";
+        $data = null;
+        $query=$connexion->query($sql);
+			while ($donnees=$query->fetch()) {
+				$data[]=Array('id'=>$donnees['id'],'titre'=>$donnees['titre'],'contenu'=>$donnees['contenu'],'idCommerce'=>$donnees['idCommerce'],'idTheme'=>$donnees['idTheme'],'nomCommerce'=>$donnees['nomCommerce']);
+			}
+	   	$response = new Response();
+	    $response->setContent(json_encode($data));
+		$response->headers->set('Content-Type', 'application/json');
+	    return $response;
+	});
+
 
 /**************** GET RESEAU *************************/
 
