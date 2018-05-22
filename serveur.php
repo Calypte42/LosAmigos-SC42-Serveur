@@ -228,7 +228,7 @@
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         $response = new Response();
-        $response->setContent(json_encode(utf8ize($stmt->fetch(PDO::FETCH_OBJ))));
+        $response->setContent(json_encode($stmt->fetch(PDO::FETCH_OBJ)));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     });
@@ -239,8 +239,8 @@
         $sql="SELECT * FROM Commerce WHERE id IN (SELECT idCommerce FROM FavoriCommerce WHERE pseudo = '".$pseudo."') ORDER BY nom;";
         $query = $connexion->query($sql);
         $data=null;
-		while ($donnees=$query->fetch()) {
-			$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],
+        while ($donnees=$query->fetch()) {
+            $data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],
             'pseudoCommercant'=>$donnees['pseudoCommercant'],
             'localisation'=>$donnees['localisation'],
             'longitude'=>$donnees['longitude'],
@@ -251,11 +251,11 @@
             'horaires'=>$donnees['horaires'],
             'lienImage'=>$donnees['lienImage']
             );
-		}
-	   	$response = new Response();
-	    $response->setContent(json_encode(utf8ize($data)));
-		$response->headers->set('Content-Type', 'application/json');
-	    return $response;
+        }
+        $response = new Response();
+        $response->setContent(json_encode($data));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     });
 
     /********************* GET - COMMERCES **************/
