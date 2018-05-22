@@ -268,7 +268,8 @@
 		$sql="UPDATE Utilisateur SET MDP = '".$data['MDP']."',dateNaissance ='".$data['dateNaissance']."',sexe =".$data['sexe'].",taille=".$data['taille'].",poids=".$data['poids']." WHERE pseudo = '".$data['pseudo']."'";
 		echo "$sql";
 		$stmt=$connexion->prepare($sql);
-		$stmt->execute();
+		$stmt->bindParam(':pseudo', $data['pseudo']);
+		$stmt->execute(array('pseudo'=>$data['pseudo'], 'MDP'=>$data['MDP'], 'dateNaissance'=>$data['dateNaissance'], 'sexe'=>$data['sexe'],'taille'=>$data['taille'],'poids'=>$data['poids']));
 		return $app->json($data, 201);
 	});
 
@@ -406,7 +407,7 @@
 	    return $response;
 	});
 
-    $app->get('/annonces/{idCommerce}', function ($idCommerce) use ($app) {
+    $app->get('/annonces/idCommerce/{idCommerce}/{pseudo}', function ($idCommerce, $pseudo) use ($app) {
 	   	$connexion=connexionbd();
 
         //recuperer l'utilisateur
