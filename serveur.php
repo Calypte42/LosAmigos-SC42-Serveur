@@ -265,7 +265,7 @@
 					$data = json_decode($content, true);
 			}
 		$connexion=connexionbd();
-		$sql="UPDATE Utlisateur SET MDP = '".$data['MDP']."',dateNaissance ='".$data['dateNaissance']."',sexe =".$data['sexe'].",taille=".$data['taille'].",poids=".$data['poids']." WHERE pseudo = '".$data['pseudo']."'";
+		$sql="UPDATE Utilisateur SET MDP = '".$data['MDP']."',dateNaissance ='".$data['dateNaissance']."',sexe =".$data['sexe'].",taille=".$data['taille'].",poids=".$data['poids']." WHERE pseudo = '".$data['pseudo']."'";
 		$stmt=$connexion->prepare($sql);
 		$stmt->execute();
 		return $app->json($data, 201);
