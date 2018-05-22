@@ -266,6 +266,7 @@
 			}
 		$connexion=connexionbd();
 		$sql="UPDATE Utilisateur SET MDP = '".$data['MDP']."',dateNaissance ='".$data['dateNaissance']."',sexe =".$data['sexe'].",taille=".$data['taille'].",poids=".$data['poids']." WHERE pseudo = '".$data['pseudo']."'";
+		echo "$sql";
 		$stmt=$connexion->prepare($sql);
 		$stmt->execute();
 		return $app->json($data, 201);
