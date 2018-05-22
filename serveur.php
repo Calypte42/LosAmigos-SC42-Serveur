@@ -50,7 +50,7 @@
 	$app->get('/themesprincipaux', function () use ($app) {
 	   	$connexion=connexionbd();
 
-		$sql="SELECT * FROM Theme WHERE idNomPere is null AND nom <> 'Commerce'";
+		$sql="SELECT * FROM Theme WHERE idNomPere is null";
 
 		$query = $connexion->query($sql);
 		while ($donnees=$query->fetch()) {
@@ -60,21 +60,6 @@
 	    $response->setContent(json_encode(utf8ize($data)));
 		$response->headers->set('Content-Type', 'application/json');
 	    return $response;
-	});
-
-	$app->get('/themesAffinage/{pseudo}', function ($pseudo) use ($app) {
-			$connexion=connexionbd();
-
-			$sql="SELECT id,pseudo,nom FROM Theme t, Apprecie a WHERE t.idNomPere = a.idTheme AND pseudo = '".$pseudo."'";
-
-			$query = $connexion->query($sql);
-			while ($donnees=$query->fetch()) {
-				$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'], 'pseudo' => $donnees['pseudo']);
-			}
-			$response = new Response();
-			$response->setContent(json_encode(utf8ize($data)));
-			$response->headers->set('Content-Type', 'application/json');
-			return $response;
 	});
 
     $app->get('/themes/listeThemesEnfant/id/{id}', function ($id) use ($app) {
@@ -104,22 +89,6 @@
 		$response->headers->set('Content-Type', 'application/json');
 	    return $response;
 	});
-
-	$app->get('/themes/listeThemesEnfant/nom/{nom}', function ($nom) use ($app) {
-		$connexion=connexionbd();
-	$sql="SELECT * FROM Theme WHERE idNomPere = (SELECT id FROM Theme WHERE nom LIKE '".$nom."') ORDER BY nom";
-	$query = $connexion->query($sql);
-			$data=null;
-	while ($donnees=$query->fetch()) {
-		$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],'idNomPere'=>$donnees['idNomPere']);
-	}
-		$response = new Response();
-		$response->setContent(json_encode($data));
-	$response->headers->set('Content-Type', 'application/json');
-		return $response;
-	});
-
-
 
 	/********** GET - VILLES ****************/
 
@@ -443,7 +412,7 @@
 		//calcul age
 		$age = (time() - strtotime($user['dateNaissance'])) / 3600 / 24 / 365;
 
-		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Utilisateur u, Commerce c, Annonce ann, ListeAnnonce l, Apprecie ap WHERE u.pseudo = ap.pseudo AND l.idtheme = ap.idtheme AND c.localisation = '$localisation' AND c.id = l.idCommerce AND ap.pseudo = '$pseudo' AND $age >= ageMin AND $age <= ageMax AND (sexe = '$sexe' OR sexe = 'Mixte')";
+		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Utilisateur u, Commerce c, Annonce ann, ListeAnnonce l, Apprecie ap WHERE u.pseudo = ap.pseudo AND  ann.id = l.idAnnonce AND l.idtheme = ap.idtheme AND c.localisation = '$localisation' AND c.id = l.idCommerce AND ap.pseudo = '$pseudo' AND $age >= ageMin AND $age <= ageMax AND (sexe = '$sexe' OR sexe = 'Mixte')";
         $data = null;
         $query=$connexion->query($sql);
 			while ($donnees=$query->fetch()) {
@@ -468,7 +437,7 @@
         //calcul age
 		$age = (time() - strtotime($user['dateNaissance'])) / 3600 / 24 / 365;
 
-		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Commerce c, Annonce ann, ListeAnnonce l WHERE l.idCommerce = $idCommerce AND $age >= ageMin AND c.id = l.idCommerce";
+		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Commerce c, Annonce ann, ListeAnnonce l WHERE l.idCommerce = $idCommerce AND $age >= ageMin AND c.id = l.idCommerce  AND ann.id = l.idAnnonce";
         $data = null;
         $query=$connexion->query($sql);
 			while ($donnees=$query->fetch()) {
@@ -493,7 +462,7 @@
         //calcul age
 		$age = (time() - strtotime($user['dateNaissance'])) / 3600 / 24 / 365;
 
-		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Commerce c, Annonce ann, ListeAnnonce l, FavoriCommerce f WHERE l.idCommerce = f.idCommerce AND $age >= ageMin AND c.id = l.idCommerce AND f.pseudo = '$pseudo'";
+		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Commerce c, Annonce ann, ListeAnnonce l, FavoriCommerce f WHERE l.idCommerce = f.idCommerce AND $age >= ageMin AND c.id = l.idCommerce AND f.pseudo = '$pseudo' AND ann.id = l.idAnnonce";
         $data = null;
         $query=$connexion->query($sql);
 			while ($donnees=$query->fetch()) {
@@ -1007,22 +976,6 @@ $stmt->execute(array('pseudo'=>$data['pseudo'],'sujetReseau'=>$data['sujetReseau
 return $app->json($data, 201);
 });
 
-$app->get('/verifPseudo/{pseudo}', function ($pseudo) use ($app) {
-		$connexion=connexionbd();
-
-	$sql="SELECT COUNT(pseudo) as nombre FROM Utilisateur WHERE pseudo='".$pseudo."'";
-	$query=$connexion->query($sql);
-		while ($donnees=$query->fetch()) {
-			$data[]=Array('nombre'=>$donnees['nombre']);
-		}
-		$response = new Response();
-		$response->setContent(json_encode(utf8ize($data)));
-	$response->headers->set('Content-Type', 'application/json');
-		return $response;
-});
 
 	$app->run();
-
-
-
 ?>
