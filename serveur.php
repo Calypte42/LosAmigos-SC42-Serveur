@@ -266,7 +266,6 @@
 			}
 		$connexion=connexionbd();
 		$sql="UPDATE Utilisateur SET MDP = '".$data['MDP']."',dateNaissance ='".$data['dateNaissance']."',sexe =".$data['sexe'].",taille=".$data['taille'].",poids=".$data['poids']." WHERE pseudo = '".$data['pseudo']."'";
-		echo "$sql";
 		$stmt=$connexion->prepare($sql);
 		$stmt->bindParam(':pseudo', $data['pseudo']);
 		$stmt->execute(array('pseudo'=>$data['pseudo'], 'MDP'=>$data['MDP'], 'dateNaissance'=>$data['dateNaissance'], 'sexe'=>$data['sexe'],'taille'=>$data['taille'],'poids'=>$data['poids']));
