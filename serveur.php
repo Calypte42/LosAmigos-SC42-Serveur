@@ -200,7 +200,13 @@
             'pseudoCommercant'=>$donnees['pseudoCommercant'],
             'localisation'=>$donnees['localisation'],
             'longitude'=>$donnees['longitude'],
-            'latitude'=>$donnees['latitude']);
+            'latitude'=>$donnees['latitude'],
+            'numeroTelephone'=>$donnees['numeroTelephone'],
+            'adresse'=>$donnees['adresse'],
+            'description'=>$donnees['description'],
+            'horaires'=>$donnees['horaires'],
+            'lienImage'=>$donnees['lienImage']
+            );
 		}
 	   	$response = new Response();
 	    $response->setContent(json_encode(utf8ize($data)));
@@ -390,7 +396,17 @@
     $app->get('/annonces/{idCommerce}', function ($idCommerce) use ($app) {
 	   	$connexion=connexionbd();
 
-		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Commerce c, Annonce ann, ListeAnnonce l WHERE l.idCommerce = $idCommerce AND c.id = l.idCommerce";
+        //recuperer l'utilisateur
+	   	$sql="SELECT * FROM Utilisateur WHERE pseudo = '$pseudo'";
+		$stmt=$connexion->prepare($sql);
+		$stmt->bindParam(':pseudo', $pseudo);
+		$stmt->execute();
+		$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        //calcul age
+		$age = (time() - strtotime($user['dateNaissance'])) / 3600 / 24 / 365;
+
+		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Commerce c, Annonce ann, ListeAnnonce l WHERE l.idCommerce = $idCommerce AND $age >= ageMin AND c.id = l.idCommerce";
         $data = null;
         $query=$connexion->query($sql);
 			while ($donnees=$query->fetch()) {
@@ -405,7 +421,17 @@
     $app->get('/annonces/favoris/{pseudo}', function ($pseudo) use ($app) {
 	   	$connexion=connexionbd();
 
-		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Commerce c, Annonce ann, ListeAnnonce l, FavoriCommerce f WHERE l.idCommerce = f.idCommerce AND c.id = l.idCommerce AND f.pseudo = '$pseudo'";
+        //recuperer l'utilisateur
+	   	$sql="SELECT * FROM Utilisateur WHERE pseudo = '$pseudo'";
+		$stmt=$connexion->prepare($sql);
+		$stmt->bindParam(':pseudo', $pseudo);
+		$stmt->execute();
+		$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        //calcul age
+		$age = (time() - strtotime($user['dateNaissance'])) / 3600 / 24 / 365;
+
+		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Commerce c, Annonce ann, ListeAnnonce l, FavoriCommerce f WHERE l.idCommerce = f.idCommerce AND $age >= ageMin AND c.id = l.idCommerce AND f.pseudo = '$pseudo'";
         $data = null;
         $query=$connexion->query($sql);
 			while ($donnees=$query->fetch()) {
@@ -419,8 +445,17 @@
 
     $app->get('/annonces/toutes/{pseudo}', function ($pseudo) use ($app) {
 	   	$connexion=connexionbd();
+        //recuperer l'utilisateur
+	   	$sql="SELECT * FROM Utilisateur WHERE pseudo = '$pseudo'";
+		$stmt=$connexion->prepare($sql);
+		$stmt->bindParam(':pseudo', $pseudo);
+		$stmt->execute();
+		$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Commerce c, Annonce ann, ListeAnnonce l, Choisi ch WHERE ch.pseudo = '$pseudo' AND c.localisation = ch.nomLieu AND ann.id = l.idAnnonce AND l.idCommerce = c.id";
+        //calcul age
+		$age = (time() - strtotime($user['dateNaissance'])) / 3600 / 24 / 365;
+
+		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Commerce c, Annonce ann, ListeAnnonce l, Choisi ch WHERE ch.pseudo = '$pseudo' AND $age >= ageMin AND c.localisation = ch.nomLieu AND ann.id = l.idAnnonce AND l.idCommerce = c.id";
         $data = null;
         $query=$connexion->query($sql);
 			while ($donnees=$query->fetch()) {
