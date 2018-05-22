@@ -50,7 +50,7 @@
 	$app->get('/themesprincipaux', function () use ($app) {
 	   	$connexion=connexionbd();
 
-		$sql="SELECT * FROM Theme WHERE idNomPere is null";
+		$sql="SELECT * FROM Theme WHERE idNomPere is null AND nom <> 'Commerce'";
 
 		$query = $connexion->query($sql);
 		while ($donnees=$query->fetch()) {
@@ -60,6 +60,21 @@
 	    $response->setContent(json_encode(utf8ize($data)));
 		$response->headers->set('Content-Type', 'application/json');
 	    return $response;
+	});
+
+	$app->get('/themesAffinage/{pseudo}', function ($pseudo) use ($app) {
+			$connexion=connexionbd();
+
+			$sql="SELECT id,pseudo,nom FROM Theme t, Apprecie a WHERE t.idNomPere = a.idTheme AND pseudo = '".$pseudo."'";
+
+			$query = $connexion->query($sql);
+			while ($donnees=$query->fetch()) {
+				$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'], 'pseudo' => $donnees['pseudo']);
+			}
+			$response = new Response();
+			$response->setContent(json_encode(utf8ize($data)));
+			$response->headers->set('Content-Type', 'application/json');
+			return $response;
 	});
 
     $app->get('/themes/listeThemesEnfant/id/{id}', function ($id) use ($app) {
@@ -89,6 +104,22 @@
 		$response->headers->set('Content-Type', 'application/json');
 	    return $response;
 	});
+
+	$app->get('/themes/listeThemesEnfant/nom/{nom}', function ($nom) use ($app) {
+		$connexion=connexionbd();
+	$sql="SELECT * FROM Theme WHERE idNomPere = (SELECT id FROM Theme WHERE nom LIKE '".$nom."') ORDER BY nom";
+	$query = $connexion->query($sql);
+			$data=null;
+	while ($donnees=$query->fetch()) {
+		$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],'idNomPere'=>$donnees['idNomPere']);
+	}
+		$response = new Response();
+		$response->setContent(json_encode($data));
+	$response->headers->set('Content-Type', 'application/json');
+		return $response;
+	});
+
+
 
 	/********** GET - VILLES ****************/
 
@@ -976,6 +1007,22 @@ $stmt->execute(array('pseudo'=>$data['pseudo'],'sujetReseau'=>$data['sujetReseau
 return $app->json($data, 201);
 });
 
+$app->get('/verifPseudo/{pseudo}', function ($pseudo) use ($app) {
+		$connexion=connexionbd();
+
+	$sql="SELECT COUNT(pseudo) as nombre FROM Utilisateur WHERE pseudo='".$pseudo."'";
+	$query=$connexion->query($sql);
+		while ($donnees=$query->fetch()) {
+			$data[]=Array('nombre'=>$donnees['nombre']);
+		}
+		$response = new Response();
+		$response->setContent(json_encode(utf8ize($data)));
+	$response->headers->set('Content-Type', 'application/json');
+		return $response;
+});
 
 	$app->run();
+
+
+
 ?>
