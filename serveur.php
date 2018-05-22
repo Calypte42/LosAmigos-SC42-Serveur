@@ -65,11 +65,11 @@
 	$app->get('/themesAffinage/{pseudo}', function ($pseudo) use ($app) {
 			$connexion=connexionbd();
 
-			$sql="SELECT * FROM Theme, Apprecie WHERE idNomPere = id AND pseudo = '".$pseudo."";
+			$sql="SELECT id,pseudo,nom FROM Theme t, Apprecie a WHERE t.idNomPere = a.idTheme AND pseudo = '".$pseudo."'";
 
 			$query = $connexion->query($sql);
 			while ($donnees=$query->fetch()) {
-				$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'],'idNomPere'=>$donnees['idNomPere']);
+				$data[]=Array('id'=>$donnees['id'],'nom'=>$donnees['nom'], 'pseudo' => $donnees['pseudo']);
 			}
 			$response = new Response();
 			$response->setContent(json_encode(utf8ize($data)));
