@@ -634,7 +634,7 @@
 			$data[]=Array('sujet'=>$donnees['sujet'],'description'=>$donnees['description'],'pseudoAdmin'=>$donnees['pseudoAdmin'],'localisation'=>$donnees['localisation'],'visibilite'=>$donnees['visibilite']);
 		}
 	   	$response = new Response();
-	    $response->setContent(json_encode(utf8ize($data)));
+	    $response->setContent(json_encode($data));
 		$response->headers->set('Content-Type', 'application/json');
 	    return $response;
 	});
@@ -724,7 +724,7 @@
     /************** POST - Reseau ************/
    /************** POST - Reseau ************/
 
-		$app->post('/reseau/ajoutReseau', function (Request $request) use ($app) {
+	/*	$app->post('/reseau/ajoutReseau', function (Request $request) use ($app) {
 		$data = [];
 			if ($content = $request->getContent()) {
 					$data = json_decode($content, true);
@@ -734,8 +734,20 @@
 		$stmt=$connexion->prepare($sql);
 		$stmt->execute(array('sujet'=>$data['sujet'],'description'=>$data['description'],'pseudoAdmin'=>$data['pseudoAdmin'],'localisation'=>$data['localisation'], 'visibilite'=>$data['visibilite']));
 		return $app->json($data, 201);
-		});
+	}); */
 
+
+	$app->post('/reseau/ajoutReseau', function (Request $request) use ($app) {
+		$data = [];
+			if ($content = $request->getContent()) {
+					$data = json_decode($content, true);
+			}
+		$connexion=connexionbd();
+		$sql="INSERT INTO Reseau(sujet,description,pseudoAdmin,localisation,visibilite) values (:sujet,:description,:pseudoAdmin,:localisation,:visibilite)";
+		$stmt=$connexion->prepare($sql);
+		$stmt->execute(array('sujet'=>$data['sujet'],'description'=>$data['description'],'pseudoAdmin'=>$data['pseudoAdmin'],'localisation'=>$data['localisation'], 'visibilite'=>$data['visibilite']));
+		return $app->json($data, 201);
+	});
 
     $app->post('/reseau/message', function (Request $request) use ($app) {
 		$data = [];
@@ -958,6 +970,17 @@ $app->get('/SuppressionInvitation/{pseudo}/{sujet}', function ($pseudo,$sujet) u
 		return $response;
 });
 
+// A modifier ? pas correcte de supprimer par un get
+
+$app->get('/SuppressionAdhere/{pseudo}/{sujet}', function ($pseudo,$sujet) use ($app) {
+		$connexion=connexionbd();
+
+	$sql="DELETE FROM Adhere WHERE pseudo='".$pseudo."' AND sujetReseau='".$sujet."'";
+	$stmt=$connexion->prepare($sql);
+	$stmt->execute();
+		$response = new Response();
+		return $response;
+});
 
 $app->get('/listeReseauAdmin/{pseudo}', function ($pseudo) use ($app) {
 		$connexion=connexionbd();
