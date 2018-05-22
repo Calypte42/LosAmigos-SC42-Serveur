@@ -402,6 +402,36 @@
 	    return $response;
 	});
 
+    $app->get('/annonces/favoris/{pseudo}', function ($pseudo) use ($app) {
+	   	$connexion=connexionbd();
+
+		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Commerce c, Annonce ann, ListeAnnonce l, FavoriCommerce f WHERE l.idCommerce = f.idCommerce AND c.id = l.idCommerce AND f.pseudo = '$pseudo'";
+        $data = null;
+        $query=$connexion->query($sql);
+			while ($donnees=$query->fetch()) {
+				$data[]=Array('id'=>$donnees['id'],'titre'=>$donnees['titre'],'contenu'=>$donnees['contenu'],'idCommerce'=>$donnees['idCommerce'],'idTheme'=>$donnees['idTheme'],'nomCommerce'=>$donnees['nomCommerce']);
+			}
+	   	$response = new Response();
+	    $response->setContent(json_encode($data));
+		$response->headers->set('Content-Type', 'application/json');
+	    return $response;
+	});
+
+    $app->get('/annonces/toutes/{pseudo}', function ($pseudo) use ($app) {
+	   	$connexion=connexionbd();
+
+		$sql="SELECT DISTINCT ann.id, ann.titre, ann.contenu, l.idCommerce, l.idTheme, c.nom AS nomCommerce FROM Commerce c, Annonce ann, ListeAnnonce l, Choisi ch WHERE ch.pseudo = '$pseudo' AND c.localisation = ch.nomLieu AND ann.id = l.idAnnonce AND l.idCommerce = c.id";
+        $data = null;
+        $query=$connexion->query($sql);
+			while ($donnees=$query->fetch()) {
+				$data[]=Array('id'=>$donnees['id'],'titre'=>$donnees['titre'],'contenu'=>$donnees['contenu'],'idCommerce'=>$donnees['idCommerce'],'idTheme'=>$donnees['idTheme'],'nomCommerce'=>$donnees['nomCommerce']);
+			}
+	   	$response = new Response();
+	    $response->setContent(json_encode($data));
+		$response->headers->set('Content-Type', 'application/json');
+	    return $response;
+	});
+
     $app->get('/annonce/{idAnnonce}', function ($idAnnonce) use ($app) {
 	   	$connexion=connexionbd();
 
