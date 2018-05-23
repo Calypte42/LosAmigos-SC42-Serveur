@@ -17,7 +17,7 @@ $req->execute(array(
   'numeroTelephone' =>$_REQUEST['tel'],
   'adresse' => $_REQUEST['adresse'],
   'description' =>$_REQUEST['description'],
-  'horaires' => $_REQUEST['horaires'],
+  'horaires' => $_REQUEST['horaire'],
   'lieu' => $_REQUEST['lieu'],
 
 ));
