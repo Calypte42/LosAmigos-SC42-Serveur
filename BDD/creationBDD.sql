@@ -47,8 +47,8 @@ CREATE TABLE Commerce (
   nom varchar(50) NOT NULL,
   pseudoCommercant varchar(20) NOT NULL,
   localisation varchar(30) NOT NULL,
-  latitude varchar(50),
-  longitude varchar(50),
+  latitude varchar(50) NOT NULL,
+  longitude varchar(50) NOT NULL,
   numeroTelephone varchar(20),
   adresse varchar(300),
   description varchar(500),
@@ -160,6 +160,7 @@ CREATE TABLE Message (
     REFERENCES Reseau(sujet)
 );
 
+/*
 CREATE TABLE Evenement (
   intitule varchar(100),
   dateEvenement varchar(10),
@@ -169,7 +170,7 @@ CREATE TABLE Evenement (
     REFERENCES Reseau(sujet),
   CONSTRAINT pseudoCreateur_FK FOREIGN KEY (pseudoCreateur)
     REFERENCES Utilisateur(pseudo)
-);
+); */
 
 CREATE TABLE Publicite (
   id int PRIMARY KEY AUTO_INCREMENT,

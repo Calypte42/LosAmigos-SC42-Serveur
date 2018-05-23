@@ -3,8 +3,8 @@ include '../BDD/bdd.php';
 $bdd = connexionbd();
 
 
-$requete='INSERT INTO Commerce (nom,pseudoCommercant,latitude,longitude,localisation)
-   SELECT :nom,:pseudoCommercant,:latitude,:longitude,nom FROM Lieu WHERE nom = :lieu';
+$requete='INSERT INTO Commerce (nom,pseudoCommercant,latitude,longitude,numeroTelephone,adresse,description,horaires,localisation)
+   SELECT :nom,:pseudoCommercant,:latitude,:longitude,:numeroTelephone,:adresse,:description,:horaires,nom FROM Lieu WHERE nom = :lieu';
 
 
 $req = $bdd->prepare($requete);
@@ -14,6 +14,10 @@ $req->execute(array(
   'pseudoCommercant' => $_REQUEST['pseudoCommercant'],
   'latitude' => $_REQUEST['latitude'],
   'longitude' => $_REQUEST['longitude'],
+  'numeroTelephone' =>$_REQUEST['tel'],
+  'adresse' => $_REQUEST['adresse'],
+  'description' =>$_REQUEST['description'],
+  'horaires' => $_REQUEST['horaires'],
   'lieu' => $_REQUEST['lieu'],
 
 ));
