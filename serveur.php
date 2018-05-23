@@ -50,7 +50,7 @@
 	$app->get('/themesprincipaux', function () use ($app) {
 	   	$connexion=connexionbd();
 
-		$sql="SELECT * FROM Theme WHERE idNomPere is null AND nom <> 'Commerce'";
+		$sql="SELECT * FROM Theme WHERE idNomPere is null AND nom <> 'Commerce' AND nom<> 'Domaine metier'";
 
 		$query = $connexion->query($sql);
 		while ($donnees=$query->fetch()) {
@@ -900,6 +900,7 @@ $app->get('/SuppressionInvitation/{pseudo}/{sujet}', function ($pseudo,$sujet) u
 		$connexion=connexionbd();
 
 	$sql="DELETE FROM Invitation WHERE pseudo='".$pseudo."' AND sujetReseau='".$sujet."'";
+	echo "$sql";
 	$stmt=$connexion->prepare($sql);
 	$stmt->execute();
 		$response = new Response();
